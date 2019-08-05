@@ -18,26 +18,28 @@ def get_fresh_data_for_prediction(df: pd.DataFrame):
     return result
 
 
-df = pd.read_csv('data/TITAN.NS.csv')
-df.drop(columns=["Date"], inplace=True)
-df.dropna(inplace=True)
+def random_forest_classifier(n_estimators, max_depth, random_state):
+    df = pd.read_csv('data/TITAN.NS.csv')
+    df.drop(columns=["Date"], inplace=True)
+    df.dropna(inplace=True)
 
-# create label and save rows with labels for prediction task
-df['shifted_value'] = df['Adj Close'].shift(-10)
-data_to_predict = get_fresh_data_for_prediction(df)
-df = df.apply(lambda x: create_label(x), axis=1)
-df.dropna(inplace=True)
+    # create label and save rows with labels for prediction task
+    df['shifted_value'] = df['Adj Close'].shift(-10)
+    data_to_predict = get_fresh_data_for_prediction(df)
+    df = df.apply(lambda x: create_label(x), axis=1)
+    df.dropna(inplace=True)
 
-# convert dataframe to numpy array
-data = df.to_numpy()
-X = np.asarray(list(map(lambda row: row[:-1], data)))
-y = np.asarray(list(map(lambda row: row[-1], data)))
-print(X)
+    # convert dataframe to numpy array
+    data = df.to_numpy()
+    X = np.asarray(list(map(lambda row: row[:-1], data)))
+    y = np.asarray(list(map(lambda row: row[-1], data)))
 
-# training and testing
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-clf = RandomForestClassifier(n_estimators=100, max_depth=7, random_state=0)
-clf.fit(X_train, y_train)
-print(clf.score(X_test, y_test))
+    # training and testing
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    clf = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state)
+    clf.fit(X_train, y_train)
+    score = clf.score(X_test, y_test)
+    print(score)
+    return score
 
 
