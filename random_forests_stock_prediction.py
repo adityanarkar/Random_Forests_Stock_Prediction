@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+import features
 
 data_to_predict = np.nan
 y = []
@@ -15,19 +16,24 @@ def create_label(row):
 def get_fresh_data_for_prediction(df: pd.DataFrame):
     result = df.where(df['shifted_value'].isna())
     result.dropna(thresh=1, inplace=True)
+    result.drop(columns=['shifted_value'], inplace=True)
     return result
 
 
 def random_forest_classifier(n_estimators, max_depth, random_state):
+    window = 10
     df = pd.read_csv('data/TITAN.NS.csv')
     df.drop(columns=["Date"], inplace=True)
     df.dropna(inplace=True)
+    df = features.simpleMA(df, window)
+    df = features.weightedMA(df, window)
 
     # create label and save rows with labels for prediction task
     df['shifted_value'] = df['Adj Close'].shift(-10)
     data_to_predict = get_fresh_data_for_prediction(df)
     df = df.apply(lambda x: create_label(x), axis=1)
     df.dropna(inplace=True)
+    df.drop(columns=['shifted_value'], inplace=True)
 
     # convert dataframe to numpy array
     data = df.to_numpy()
@@ -40,6 +46,8 @@ def random_forest_classifier(n_estimators, max_depth, random_state):
     clf.fit(X_train, y_train)
     score = clf.score(X_test, y_test)
     print(score)
+    print(clf.predict(data_to_predict))
     return score
 
 
+random_forest_classifier(200, 10, 1)
