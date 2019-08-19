@@ -22,18 +22,10 @@ def weightedMA(df: pd.DataFrame, moving_avg_window):
     return df
 
 
-def EMA(df: pd.DataFrame, moving_avg_window, close, SMA):
-    p = df.iloc[0, SMA]
-    columnName = f"{moving_avg_window}-Day-EMA"
-    df[columnName] = np.nan
-
-    multiplier = (2 / (moving_avg_window + 1))
-    for row in range(moving_avg_window, len(df.index)):
-        if row == moving_avg_window:
-            df.iloc[row, -1] = (df.iloc[row, close] - p) * multiplier + p
-        else:
-            p = df.iloc[row - 1, -1]
-            df.iloc[row, -1] = (df.iloc[row, close] - p) * multiplier + p
+def EMA(df: pd.DataFrame, moving_avg_window):
+    df['EMA'] = df['Adj Close'] \
+        .ewm(span=moving_avg_window, adjust=False) \
+        .mean()
     df.dropna(inplace=True)
     return df
 

@@ -2,7 +2,7 @@ from functools import reduce
 import random_forests_stock_prediction as rf
 
 n_estimators = [100, 150, 200]
-max_depth = [5, 6, 7]
+max_depth = [7, 8, 9, 10]
 random_state = [0, 1, 2]
 combinations = []
 
