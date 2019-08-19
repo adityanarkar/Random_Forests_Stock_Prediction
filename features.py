@@ -41,11 +41,11 @@ def discretizeMomentum(df: pd.DataFrame, row, prev):
     return prev
 
 
-def momentum(df, close):
-    prev = np.nan
-    for row in range(9, len(df.index)):
-        df.iloc[row, -1] = df.iloc[row, close] - df.iloc[row - 9, close]
-        prev = discretizeMomentum(df, row, prev)
+def momentum(df: pd.DataFrame, moving_window):
+    df['Momentum'] = df['Adj Close'].rolling(window=moving_window).apply(lambda x: x[0] - x[-1])
+    df['Momentum'] = df['Momentum'].rolling(window=2).apply(lambda x: 1 if x[1] > x[0] else -1)
+    df.dropna(inplace=True)
+    return df
 
 
 def stochasticK(df, close, high, low, window):
