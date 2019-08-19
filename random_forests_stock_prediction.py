@@ -23,10 +23,15 @@ def get_fresh_data_for_prediction(df: pd.DataFrame):
 def random_forest_classifier(n_estimators, max_depth, random_state):
     window = 10
     df = pd.read_csv('data/TITAN.NS.csv')
+
     df.drop(columns=["Date"], inplace=True)
     df.dropna(inplace=True)
+    col_close = df.columns.get_loc("Adj Close")
     df = features.simpleMA(df, window)
     df = features.weightedMA(df, window)
+    col_sma = df.columns.get_loc("SMA")
+    df = features.EMA(df, window, col_close, col_sma)
+    print(df.head())
 
     # create label and save rows with labels for prediction task
     df['shifted_value'] = df['Adj Close'].shift(-10)

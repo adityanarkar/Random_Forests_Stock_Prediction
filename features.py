@@ -8,27 +8,34 @@ def simpleMA(df: pd.DataFrame, moving_avg_window):
     return df
 
 
+def weighted_calculations(x, moving_avg_window):
+    wts = np.arange(start=1, stop=moving_avg_window + 1, step=1)
+    return (wts * x).mean()
+
+
+
 def weightedMA(df: pd.DataFrame, moving_avg_window):
-    wts = np.arange(start=1, stop=moving_avg_window+1, step=1)
-    df['WMA'] = df['Adj Close'].rolling(window=moving_avg_window).apply(lambda x: (wts * x).mean())
+    df['WMA'] = df['Adj Close'] \
+        .rolling(window=moving_avg_window) \
+        .apply(lambda x: weighted_calculations(x, moving_avg_window))
     df.dropna(inplace=True)
     return df
 
 
-def EMA(df, moving_avg_window, close):
-    temp = 0
-    columnName = str(moving_avg_window) + '-day-EMA'
+def EMA(df: pd.DataFrame, moving_avg_window, close, SMA):
+    p = df.iloc[0, SMA]
+    columnName = f"{moving_avg_window}-Day-EMA"
     df[columnName] = np.nan
-    for row in range(moving_avg_window, moving_avg_window + 1):
-        temp = df.iloc[row - moving_avg_window:row - 1, close].mean()
 
     multiplier = (2 / (moving_avg_window + 1))
     for row in range(moving_avg_window, len(df.index)):
         if row == moving_avg_window:
-            df.iloc[row, -1] = (df.iloc[row, close] - temp) * multiplier + temp
+            df.iloc[row, -1] = (df.iloc[row, close] - p) * multiplier + p
         else:
-            temp = df.iloc[row - 1, -1]
-            df.iloc[row, -1] = (df.iloc[row, close] - temp) * multiplier + temp
+            p = df.iloc[row - 1, -1]
+            df.iloc[row, -1] = (df.iloc[row, close] - p) * multiplier + p
+    df.dropna(inplace=True)
+    return df
 
 
 def discretizeMomentum(df: pd.DataFrame, row, prev):
