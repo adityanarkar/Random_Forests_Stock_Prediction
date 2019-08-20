@@ -57,7 +57,6 @@ def momentum(df: pd.DataFrame, moving_window):
 
 
 def stochasticK_calculations(x):
-    print(x)
     currentClose = x["Adj Close"]
     highestHigh = x["highestHigh"]
     lowestLow = x["lowestLow"]
@@ -65,14 +64,6 @@ def stochasticK_calculations(x):
 
 
 def stochasticK(df: pd.DataFrame, moving_window):
-    # prev = np.nan
-    # for row in range(window, len(df.index)):
-    #     currentClose = df.iloc[row, close]
-    #     highestHigh = df.iloc[row - window:row, high].max()
-    #     lowestLow = df.iloc[row - window:row, low].min()
-    #     df.iloc[row, -1] = (currentClose - lowestLow) / (highestHigh - lowestLow)
-    #     prev = discretizeMomentum(df, row, prev)
-
     df["highestHigh"] = df["High"].rolling(window=moving_window).apply(lambda x: max(x))
     df["lowestLow"] = df["Low"].rolling(window=moving_window).apply(lambda x: min(x))
     df.dropna(inplace=True)
@@ -83,12 +74,14 @@ def stochasticK(df: pd.DataFrame, moving_window):
     return df
 
 
-
-def stochasticD(df, K):
-    prev = np.nan
-    for row in range(2, len(df.index)):
-        df.iloc[row, -1] = df.iloc[row - 2:row, K].mean()
-        prev = discretizeMomentum(df, row, prev)
+def stochasticD(df: pd.DataFrame, moving_window):
+    if "StochasticK" in df:
+        df["StochasticD"] = df["StochasticK"].rolling(3).mean()
+        df.dropna(inplace=True)
+        print(df.head())
+        return df
+    else:
+        return stochasticD(stochasticK(df, moving_window), moving_window)
 
 
 def RSI(df: pd.DataFrame, close):
