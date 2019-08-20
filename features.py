@@ -2,10 +2,18 @@ import numpy as np
 import pandas as pd
 
 
-def simpleMA(df: pd.DataFrame, moving_avg_window):
+def simpleMA(df: pd.DataFrame, moving_avg_window, discritize: bool):
     df['SMA'] = df['Adj Close'].rolling(window=moving_avg_window).mean()
     df.dropna(inplace=True)
+    if discritize:
+        return discritizeSMA(df)
     return df
+
+
+def discritizeSMA(df: pd.DataFrame):
+    df["SMA"] = np.where(df["Adj Close"] > df["SMA"], 1, 0)
+    return df
+
 
 
 def weighted_calculations(x, moving_avg_window):
@@ -48,14 +56,23 @@ def momentum(df: pd.DataFrame, moving_window):
     return df
 
 
-def stochasticK(df, close, high, low, window):
-    prev = np.nan
-    for row in range(window, len(df.index)):
-        currentClose = df.iloc[row, close]
-        highestHigh = df.iloc[row - window:row, high].max()
-        lowestLow = df.iloc[row - window:row, low].min()
-        df.iloc[row, -1] = (currentClose - lowestLow) / (highestHigh - lowestLow)
-        prev = discretizeMomentum(df, row, prev)
+def stochasticK_calculations(x):
+    print(x)
+
+
+def stochasticK(df: pd.DataFrame, moving_window):
+    # prev = np.nan
+    # for row in range(window, len(df.index)):
+    #     currentClose = df.iloc[row, close]
+    #     highestHigh = df.iloc[row - window:row, high].max()
+    #     lowestLow = df.iloc[row - window:row, low].min()
+    #     df.iloc[row, -1] = (currentClose - lowestLow) / (highestHigh - lowestLow)
+    #     prev = discretizeMomentum(df, row, prev)
+    df.rolling_apply(lambda x: stochasticK_calculations(x))
+    # highestHighs = df["High"].rolling(window=moving_window).apply(lambda x: max(x))
+    # lowestLow = df["Low"].rolling(window=moving_window).apply(lambda x: min(x))
+    # print(highestHighs)
+    # print(lowestLow)
 
 
 def stochasticD(df, K):

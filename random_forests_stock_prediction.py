@@ -26,11 +26,12 @@ def random_forest_classifier(n_estimators, max_depth, random_state):
 
     df.drop(columns=["Date"], inplace=True)
     df.dropna(inplace=True)
-    df = features.simpleMA(df, window)
+    df = features.simpleMA(df, window, True)
     df = features.weightedMA(df, window)
     df = features.EMA(df, window)
     df = features.momentum(df, window)
     print(df.head())
+    # features.stochasticK(df, window)
 
     # create label and save rows with labels for prediction task
     df['shifted_value'] = df['Adj Close'].shift(-10)
