@@ -15,11 +15,9 @@ def discritizeSMA(df: pd.DataFrame):
     return df
 
 
-
 def weighted_calculations(x, moving_avg_window):
     wts = np.arange(start=1, stop=moving_avg_window + 1, step=1)
     return (wts * x).mean()
-
 
 
 def weightedMA(df: pd.DataFrame, moving_avg_window):
@@ -67,8 +65,8 @@ def stochasticK(df: pd.DataFrame, moving_window):
     df["highestHigh"] = df["High"].rolling(window=moving_window).apply(lambda x: max(x))
     df["lowestLow"] = df["Low"].rolling(window=moving_window).apply(lambda x: min(x))
     df.dropna(inplace=True)
-    df["StochasticK"] = df[["Adj Close", "highestHigh", "lowestLow"]].apply(lambda x: stochasticK_calculations(x),
-                                                                            axis=1)
+    df["StochasticK"] = df[["Adj Close", "highestHigh", "lowestLow"]] \
+        .apply(lambda x: stochasticK_calculations(x), axis=1)
     df.drop(columns=["highestHigh", "lowestLow"], inplace=True)
     print(df.head())
     return df
@@ -93,12 +91,12 @@ def RSI(df: pd.DataFrame, close):
         AvgLoss = -1 * (temp[temp < 0].sum()) / 14
         RS = AvgGain / AvgLoss
         RSIvalue = 100 - (100 / (1 + RS))
-        if (RSIvalue > 70):
+        if RSIvalue > 70:
             df.iloc[row, -1] = -1
-        elif (RSIvalue < 30):
+        elif RSIvalue < 30:
             df.iloc[row, -1] = 1
         else:
-            if (df.iloc[row - 1, -1] != np.nan and RSIvalue > df.iloc[row - 1, -1]):
+            if df.iloc[row - 1, -1] != np.nan and RSIvalue > df.iloc[row - 1, -1]:
                 df.iloc[row, -1] = 1
             else:
                 df.iloc[row, -1] = -1
