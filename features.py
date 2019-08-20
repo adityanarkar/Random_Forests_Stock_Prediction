@@ -29,7 +29,7 @@ def weightedMA(df: pd.DataFrame, moving_avg_window):
 
 
 def EMA(df: pd.DataFrame, moving_avg_window):
-    df['EMA'] = df['Adj Close'] \
+    df[f"{moving_avg_window}-day-EMA"] = df['Adj Close'] \
         .ewm(span=moving_avg_window, adjust=False) \
         .mean()
     df.dropna(inplace=True)
@@ -102,10 +102,10 @@ def RSI(df: pd.DataFrame, close):
                 df.iloc[row, -1] = -1
 
 
-def MACD(df: pd.DataFrame, close):
-    EMA(df, 9, close)
-    EMA(df, 12, close)
-    EMA(df, 26, close)
+def MACD(df: pd.DataFrame):
+    EMA(df, 9)
+    EMA(df, 12)
+    EMA(df, 26)
     df.dropna(inplace=True)
     df['MACD'] = np.nan
     MACDLine = df['12-day-EMA'] - df['26-day-EMA']
@@ -113,6 +113,7 @@ def MACD(df: pd.DataFrame, close):
     df['MACD'] = df['MACD'].diff()
     df.dropna(inplace=True)
     df['MACD'] = df['MACD'].apply(checkValue)
+    return df
 
 
 def checkValue(value):
