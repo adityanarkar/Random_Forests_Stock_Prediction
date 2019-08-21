@@ -1,7 +1,8 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+
 import features
 
 data_to_predict = np.nan
@@ -33,6 +34,7 @@ def random_forest_classifier(n_estimators, max_depth, random_state):
     features.stochasticK(df, window)
     features.stochasticD(df, window)
     features.MACD(df)
+    features.RSI(df)
     print(df.head())
 
     # create label and save rows with labels for prediction task

@@ -82,24 +82,19 @@ def stochasticD(df: pd.DataFrame, moving_window):
         return stochasticD(stochasticK(df, moving_window), moving_window)
 
 
-def RSI(df: pd.DataFrame, close):
-    for row in range(15, len(df.index)):
-        temp1 = df.iloc[row - 15:row - 2, close].reset_index(drop=True)
-        temp2 = df.iloc[row - 14:row - 1, close].reset_index(drop=True)
-        temp = temp1 - temp2
-        AvgGain = temp[temp > 0].sum() / 14
-        AvgLoss = -1 * (temp[temp < 0].sum()) / 14
-        RS = AvgGain / AvgLoss
-        RSIvalue = 100 - (100 / (1 + RS))
-        if RSIvalue > 70:
-            df.iloc[row, -1] = -1
-        elif RSIvalue < 30:
-            df.iloc[row, -1] = 1
-        else:
-            if df.iloc[row - 1, -1] != np.nan and RSIvalue > df.iloc[row - 1, -1]:
-                df.iloc[row, -1] = 1
-            else:
-                df.iloc[row, -1] = -1
+def RSI(df: pd.DataFrame):
+    df["GL"] = df["Adj Close"].rolling(window=2).apply(lambda x: x[0] - x[1])
+    df.dropna(inplace=True)
+    df["RSI"] = df["GL"].rolling(window=14).apply(lambda x: calculateRSI(x))
+    df.dropna(inplace=True)
+    return df
+
+
+def calculateRSI(x):
+    avgGain = x[x > 0].sum() / 14
+    avgLoss = x[x < 0].sum() / 14
+    RS = avgGain / avgLoss
+    return 100 - (100 / (1 + RS))
 
 
 def MACD(df: pd.DataFrame):
