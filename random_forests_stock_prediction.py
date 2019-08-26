@@ -1,48 +1,11 @@
 import numpy as np
-import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-
-import features
-
-data_to_predict = np.nan
-y = []
-
-
-def create_label(row):
-    row['target'] = 1 if row['Adj Close'] < row['shifted_value'] else -1
-    return row
-
-
-def get_fresh_data_for_prediction(df: pd.DataFrame):
-    result = df.where(df['shifted_value'].isna())
-    result.dropna(thresh=1, inplace=True)
-    result.drop(columns=['shifted_value'], inplace=True)
-    return result
+import data_preparation as dp
 
 
 def random_forest_classifier(n_estimators, max_depth, random_state):
-    window = 10
-    df = pd.read_csv('data/TITAN.NS.csv')
-
-    df.drop(columns=["Date"], inplace=True)
-    df.dropna(inplace=True)
-    features.simpleMA(df, window, True)
-    features.weightedMA(df, window)
-    features.EMA(df, window)
-    features.momentum(df, window)
-    features.stochasticK(df, window)
-    features.stochasticD(df, window)
-    features.MACD(df)
-    features.RSI(df)
-    print(df.head())
-
-    # create label and save rows with labels for prediction task
-    df['shifted_value'] = df['Adj Close'].shift(-10)
-    data_to_predict = get_fresh_data_for_prediction(df)
-    df = df.apply(lambda x: create_label(x), axis=1)
-    df.dropna(inplace=True)
-    df.drop(columns=['shifted_value'], inplace=True)
+    df, data_to_predict = dp.data_preparation('data/TITAN.NS.csv', 10).data_frame_with_features()
 
     # convert dataframe to numpy array
     data = df.to_numpy()
