@@ -1,11 +1,12 @@
 import numpy as np
+from numpy import float64
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import data_preparation as dp
 
 
 def random_forest_classifier(n_estimators, max_depth, random_state):
-    df, data_to_predict = dp.data_preparation('data/TITAN.NS.csv', 10).data_frame_with_features()
+    df, data_to_predict = dp.data_preparation('../data/AAPL.csv', 10).data_frame_with_features()
 
     # convert dataframe to numpy array
     data = df.to_numpy()

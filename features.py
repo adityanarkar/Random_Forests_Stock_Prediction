@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def simpleMA(df: pd.DataFrame, moving_avg_window, discritize: bool):
-    df['SMA'] = df['Adj Close'].rolling(window=moving_avg_window).mean()
+    df['SMA'] = df['adjusted_close'].rolling(window=moving_avg_window).mean()
     df.dropna(inplace=True)
     if discritize:
         return discritizeSMA(df)
@@ -11,7 +11,7 @@ def simpleMA(df: pd.DataFrame, moving_avg_window, discritize: bool):
 
 
 def discritizeSMA(df: pd.DataFrame):
-    df["SMA"] = np.where(df["Adj Close"] > df["SMA"], 1, 0)
+    df["SMA"] = np.where(df["adjusted_close"] > df["SMA"], 1, 0)
     return df
 
 
@@ -21,7 +21,7 @@ def weighted_calculations(x, moving_avg_window):
 
 
 def weightedMA(df: pd.DataFrame, moving_avg_window):
-    df['WMA'] = df['Adj Close'] \
+    df['WMA'] = df['adjusted_close'] \
         .rolling(window=moving_avg_window) \
         .apply(lambda x: weighted_calculations(x, moving_avg_window))
     df.dropna(inplace=True)
@@ -29,7 +29,7 @@ def weightedMA(df: pd.DataFrame, moving_avg_window):
 
 
 def EMA(df: pd.DataFrame, moving_avg_window):
-    df[f"{moving_avg_window}-day-EMA"] = df['Adj Close'] \
+    df[f"{moving_avg_window}-day-EMA"] = df['adjusted_close'] \
         .ewm(span=moving_avg_window, adjust=False) \
         .mean()
     df.dropna(inplace=True)
@@ -48,27 +48,27 @@ def discretizeMomentum(df: pd.DataFrame, row, prev):
 
 
 def momentum(df: pd.DataFrame, moving_window):
-    df['Momentum'] = df['Adj Close'].rolling(window=moving_window).apply(lambda x: x[0] - x[-1])
+    df['Momentum'] = df['adjusted_close'].rolling(window=moving_window).apply(lambda x: x[0] - x[-1])
     df['Momentum'] = df['Momentum'].rolling(window=2).apply(lambda x: 1 if x[1] > x[0] else -1)
     df.dropna(inplace=True)
     return df
 
 
 def stochasticK_calculations(x):
-    currentClose = x["Adj Close"]
+    currentClose = x["adjusted_close"]
     highestHigh = x["highestHigh"]
     lowestLow = x["lowestLow"]
-    return (currentClose - lowestLow) / (highestHigh - lowestLow)
+    high_low = (highestHigh - lowestLow)
+    return (currentClose - lowestLow) / high_low
 
 
 def stochasticK(df: pd.DataFrame, moving_window):
-    df["highestHigh"] = df["High"].rolling(window=moving_window).apply(lambda x: max(x))
-    df["lowestLow"] = df["Low"].rolling(window=moving_window).apply(lambda x: min(x))
+    df["highestHigh"] = df["high"].rolling(window=moving_window).apply(lambda x: max(x))
+    df["lowestLow"] = df["low"].rolling(window=moving_window).apply(lambda x: min(x))
     df.dropna(inplace=True)
-    df["StochasticK"] = df[["Adj Close", "highestHigh", "lowestLow"]] \
+    df["StochasticK"] = df[["adjusted_close", "highestHigh", "lowestLow"]] \
         .apply(lambda x: stochasticK_calculations(x), axis=1)
     df.drop(columns=["highestHigh", "lowestLow"], inplace=True)
-    print(df.head())
     return df
 
 
@@ -76,25 +76,27 @@ def stochasticD(df: pd.DataFrame, moving_window):
     if "StochasticK" in df:
         df["StochasticD"] = df["StochasticK"].rolling(3).mean()
         df.dropna(inplace=True)
-        print(df.head())
         return df
     else:
         return stochasticD(stochasticK(df, moving_window), moving_window)
 
 
 def RSI(df: pd.DataFrame):
-    df["GL"] = df["Adj Close"].rolling(window=2).apply(lambda x: x[0] - x[1])
+    df["GL"] = df["adjusted_close"].rolling(window=2).apply(lambda x: x[0] - x[1])
     df.dropna(inplace=True)
     df["RSI"] = df["GL"].rolling(window=14).apply(lambda x: calculateRSI(x))
+    df.drop(columns=["GL"], inplace=True)
     df.dropna(inplace=True)
+    print(df.tail())
     return df
 
 
 def calculateRSI(x):
-    avgGain = x[x > 0].sum() / 14
-    avgLoss = x[x < 0].sum() / 14
+    avgGain = abs(x[x > 0].sum() / 14)
+    avgLoss = abs(x[x < 0].sum() / 14)
     RS = avgGain / avgLoss
-    return 100 - (100 / (1 + RS))
+    result = 100 - (100 / (1 + RS))
+    return result
 
 
 def MACD(df: pd.DataFrame):
