@@ -1,5 +1,5 @@
 import pandas as pd
-import features
+from data_prep import features
 
 
 class data_preparation(object):
