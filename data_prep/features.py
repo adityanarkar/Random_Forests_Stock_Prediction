@@ -113,6 +113,27 @@ def MACD(df: pd.DataFrame):
     return df
 
 
+def calculateWilliamsR(x):
+    highestHigh = x["highestHigh"]
+    lowestLow = x["lowestLow"]
+    close = x["close"]
+    return (highestHigh - close) / (highestHigh - lowestLow)
+
+
+def discretizeOscillator(x):
+    return 1 if x[1] > x[0] else -1
+
+
+def williamsR(df: pd.DataFrame, lookback_period: int, discretize: bool):
+    df["highestHigh"] = df["high"].rolling(window=lookback_period).max()
+    df["lowestLow"] = df["low"].rolling(window=lookback_period).max()
+    df.dropna(inplace=True)
+    df["williamsR"] = df[["highestHigh", "lowestLow", "close"]].apply(lambda x: calculateWilliamsR(x), axis=1)
+    if discretize:
+        df["williamsR"] = df["williamsR"].rolling(window=2).apply(lambda x: discretizeOscillator(x))
+        df.dropna(inplace=True)
+
+
 def checkValue(value):
     if value >= 0:
         return 1
