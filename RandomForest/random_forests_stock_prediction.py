@@ -1,8 +1,7 @@
 import numpy as np
-from numpy import float64
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-import data_preparation as dp
+from data_prep import data_preparation as dp
 
 
 def random_forest_classifier(n_estimators, max_depth, random_state):

@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 import numpy as np
-import data_preparation as dp
+from data_prep import data_preparation as dp
 
 df, data_to_predict = dp.data_preparation('../data/AAPL.csv', 10).data_frame_with_features()
 
