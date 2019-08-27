@@ -35,7 +35,7 @@ class data_preparation(object):
         features.stochasticD(df, self.window)
         features.MACD(df)
         features.RSI(df)
-        features.williamsR(df, 14, True)
+        features.williamsR(df, 9, True)
 
         df['shifted_value'] = df['adjusted_close'].shift(-10)
         data_to_predict = self.get_fresh_data_for_prediction(df)
