@@ -134,6 +134,15 @@ def williamsR(df: pd.DataFrame, lookback_period: int, discretize: bool):
         df.dropna(inplace=True)
 
 
+def calculateAD(x):
+    print(x)
+    return 1 if np.isnan(x[1]) else x[0] + 1
+
+
+def ADIndicator(df: pd.DataFrame):
+    df["AD"] = ((df["close"] - df["low"]) - (df["high"] - df["close"]) / (df["high"] - df["low"])) * df["volume"]
+    df["AD"] = df["AD"].cumsum()
+
 def checkValue(value):
     if value >= 0:
         return 1

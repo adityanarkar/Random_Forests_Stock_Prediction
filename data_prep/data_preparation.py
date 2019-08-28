@@ -17,6 +17,8 @@ class data_preparation(object):
 
     def get_fresh_data_for_prediction(self, df: pd.DataFrame):
         result = df.where(df['shifted_value'].isna())
+        print(df.head())
+        print(df.tail(20))
         result.dropna(thresh=1, inplace=True)
         result.drop(columns=['shifted_value'], inplace=True)
         return result
@@ -36,8 +38,9 @@ class data_preparation(object):
         features.MACD(df)
         features.RSI(df)
         features.williamsR(df, 9, True)
+        features.ADIndicator(df)
 
-        df['shifted_value'] = df['adjusted_close'].shift(-10)
+        df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)
         data_to_predict = self.get_fresh_data_for_prediction(df)
         df = df.apply(lambda x: self.create_label(x), axis=1)
         df.dropna(inplace=True)
