@@ -10,7 +10,7 @@ lines = f.readlines()
 lines = list(map(lambda x: x.replace('\n', ''), lines))
 
 for sym in lines:
-    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={sym}&outputsize=full&interval=5min&apikey={key}=csv"
+    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={sym}&outputsize=full&apikey={key}=csv"
     filepath = f"../data/{sym}.csv"
 
     r = requests.get(url=url)
