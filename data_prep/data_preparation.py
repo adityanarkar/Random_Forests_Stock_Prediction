@@ -17,10 +17,7 @@ class data_preparation(object):
 
     def get_fresh_data_for_prediction(self, df: pd.DataFrame):
         result = df.where(df['shifted_value'].isna())
-        print(df.head())
-        print(df.tail(20))
         result.dropna(thresh=1, inplace=True)
-        result.drop(columns=['shifted_value'], inplace=True)
         return result
 
     def data_frame_with_features(self):
@@ -30,20 +27,21 @@ class data_preparation(object):
         df.dropna(inplace=True)
 
         features.simpleMA(df, self.window, True)
-        features.weightedMA(df, self.window)
-        features.EMA(df, self.window)
+        features.weightedMA(df, self.window, True)
+        features.EMA(df, self.window, True)
         features.momentum(df, self.window)
-        features.stochasticK(df, self.window)
-        features.stochasticD(df, self.window)
-        features.MACD(df)
+        features.stochasticK(df, self.window, True)
+        features.stochasticD(df, self.window, True)
+        features.MACD(df, True)
         features.RSI(df)
         features.williamsR(df, 9, True)
         features.ADIndicator(df)
+        features.CCI(df, 20)
 
         df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)
         data_to_predict = self.get_fresh_data_for_prediction(df)
         df = df.apply(lambda x: self.create_label(x), axis=1)
         df.dropna(inplace=True)
-        df.drop(columns=['shifted_value'], inplace=True)
-
+        df.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient'], inplace=True)
+        data_to_predict.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient'], inplace=True)
         return df, data_to_predict
