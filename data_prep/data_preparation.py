@@ -36,7 +36,8 @@ class data_preparation(object):
         features.RSI(df)
         features.williamsR(df, 9, True)
         features.ADIndicator(df)
-        features.CCI(df, 20)
+        features.diff_n_Months(df, 90)
+        # features.CCI(df, 20)
 
         df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)
         data_to_predict = self.get_fresh_data_for_prediction(df)

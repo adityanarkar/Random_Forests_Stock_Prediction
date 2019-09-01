@@ -146,6 +146,11 @@ def CCI(df: pd.DataFrame, window):
     df.drop(inplace=True, columns=[f"{window}-day-SMA-TP", f"{window}-day-mean-deviation", "TP"])
 
 
+def diff_n_Months(df: pd.DataFrame, n):
+    df["diff_3_months"] = df["adjusted_close"].rolling(window=n).apply(lambda x: (x[0] - x[-1]) / x[-1])
+    df.dropna(inplace=True)
+
+
 def checkValue(value):
     if value >= 0:
         return 1

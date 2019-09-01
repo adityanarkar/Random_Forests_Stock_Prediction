@@ -22,7 +22,6 @@ for sym in lines:
     df = pd.read_csv(filepath)
     df = df[::-1]
     print(filepath)
-    print(df.head())
     df.to_csv(filepath, index=False)
 
     if api_calls % 5 == 0:
