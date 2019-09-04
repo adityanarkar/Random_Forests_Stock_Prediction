@@ -146,9 +146,17 @@ def CCI(df: pd.DataFrame, window):
     df.drop(inplace=True, columns=[f"{window}-day-SMA-TP", f"{window}-day-mean-deviation", "TP"])
 
 
-def diff_n_Months(df: pd.DataFrame, n):
-    df["diff_3_months"] = df["adjusted_close"].rolling(window=n).apply(lambda x: (x[0] - x[-1]) / x[-1])
+def diff_n_Months(df: pd.DataFrame, window_size):
+    df["diff_3_months"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: (x[-1] - x[0]) / x[-1])
     df.dropna(inplace=True)
+
+
+def diff_current_lowest_low(df: pd.DataFrame, window_size):
+    print(df["adjusted_close"].head(20))
+    df["diff_LL"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: print(x[-1], x.min()))
+    df["diff_LL"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: (x[-1] - x.min()) / x[-1])
+    df.dropna(inplace=True)
+    print(df.head())
 
 
 def checkValue(value):

@@ -37,6 +37,7 @@ class data_preparation(object):
         features.williamsR(df, 9, True)
         features.ADIndicator(df)
         features.diff_n_Months(df, 90)
+        features.diff_current_lowest_low(df, 5)
         # features.CCI(df, 20)
 
         df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)
