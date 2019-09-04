@@ -183,6 +183,14 @@ def kurtosis(df: pd.DataFrame, window_size: int):
     df.dropna(inplace=True)
 
 
+def entropy(df: pd.DataFrame, window_size: int):
+    df["entropy"] = df["adjusted_close"] \
+        .rolling(window=window_size) \
+        .apply(lambda x: sc.entropy(x))
+    df.dropna(inplace=True)
+    print(df.head())
+
+
 def checkValue(value):
     if value >= 0:
         return 1
