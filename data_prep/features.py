@@ -161,6 +161,13 @@ def diff_current_highest_high(df: pd.DataFrame, window_size):
     df.dropna(inplace=True)
 
 
+def standard_deviation(df: pd.DataFrame, window_size):
+    df["std"] = df["adjusted_close"]\
+        .rolling(window=window_size)\
+        .apply(lambda x: np.std(x))
+    df.dropna(inplace=True)
+
+
 def checkValue(value):
     if value >= 0:
         return 1
