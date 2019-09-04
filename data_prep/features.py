@@ -163,16 +163,23 @@ def diff_current_highest_high(df: pd.DataFrame, window_size):
 
 
 def standard_deviation(df: pd.DataFrame, window_size):
-    df["std"] = df["adjusted_close"]\
-        .rolling(window=window_size)\
+    df["std"] = df["adjusted_close"] \
+        .rolling(window=window_size) \
         .apply(lambda x: np.std(x))
     df.dropna(inplace=True)
 
 
-def skewness(df:pd.DataFrame, window_size):
-    df["skew"] = df["adjusted_close"]\
-        .rolling(window=window_size)\
+def skewness(df: pd.DataFrame, window_size):
+    df["skew"] = df["adjusted_close"] \
+        .rolling(window=window_size) \
         .apply(lambda x: sc.skew(x))
+    df.dropna(inplace=True)
+
+
+def kurtosis(df: pd.DataFrame, window_size: int):
+    df["kurtosis"] = df["adjusted_close"]\
+        .rolling(window=window_size)\
+        .apply(lambda x: sc.kurtosis(x))
     df.dropna(inplace=True)
 
 

@@ -41,6 +41,7 @@ class data_preparation(object):
         features.diff_current_highest_high(df, 90)
         features.standard_deviation(df, 90)
         features.skewness(df, 90)
+        features.kurtosis(df, 90)
         # features.CCI(df, 20)
 
         df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)
