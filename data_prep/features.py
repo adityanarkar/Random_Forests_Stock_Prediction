@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import scipy.stats as sc
 
 
 def simpleMA(df: pd.DataFrame, moving_avg_window, discretize: bool):
@@ -165,6 +166,13 @@ def standard_deviation(df: pd.DataFrame, window_size):
     df["std"] = df["adjusted_close"]\
         .rolling(window=window_size)\
         .apply(lambda x: np.std(x))
+    df.dropna(inplace=True)
+
+
+def skewness(df:pd.DataFrame, window_size):
+    df["skew"] = df["adjusted_close"]\
+        .rolling(window=window_size)\
+        .apply(lambda x: sc.skew(x))
     df.dropna(inplace=True)
 
 
