@@ -24,7 +24,7 @@ for STOCK_FILE in os.listdir("data/"):
     STOCK = STOCK_FILE.split(".csv")[0]
     print(f"*** Started computations for {STOCK}***")
 
-    df, actual_data_to_predict = dp.data_preparation(f"data/F.csv", 100).data_frame_with_features()
+    df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}", 100).data_frame_with_features()
     complete_data = df.to_numpy()
     data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-100], complete_data[-100:,
                                                                                     :-1], complete_data[-100:, -1]
