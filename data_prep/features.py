@@ -152,11 +152,13 @@ def diff_n_Months(df: pd.DataFrame, window_size):
 
 
 def diff_current_lowest_low(df: pd.DataFrame, window_size):
-    print(df["adjusted_close"].head(20))
-    df["diff_LL"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: print(x[-1], x.min()))
     df["diff_LL"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: (x[-1] - x.min()) / x[-1])
     df.dropna(inplace=True)
-    print(df.head())
+
+
+def diff_current_highest_high(df: pd.DataFrame, window_size):
+    df["diff_HH"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: (x[-1] - x.max()) / x[-1])
+    df.dropna(inplace=True)
 
 
 def checkValue(value):
