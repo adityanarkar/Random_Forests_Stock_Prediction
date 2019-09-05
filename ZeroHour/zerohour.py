@@ -4,16 +4,16 @@ import collections
 
 
 class zeroHour(object):
-    def __init__(self, prediction_class):
-        self.prediction_class = prediction_class
+    prediction_class = 0
 
-    def predict(self, y):
+    def predict(self, x):
         if self.prediction_class == 1:
-            return np.ones(len(y))
+            return np.ones(len(x))
         else:
-            return np.full(len(y), -1)
+            return np.full(len(x), -1)
 
     def fit(self, data: pd.DataFrame):
-        ups = collections.Counter(data).get(1)
-        downs = collections.Counter(data).get(-1)
+        pred_class = data[:, -1]
+        ups = collections.Counter(pred_class).get(1)
+        downs = collections.Counter(pred_class).get(-1)
         self.prediction_class = 1 if ups >= downs else -1
