@@ -62,6 +62,7 @@ def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, t
     predictions = model.predict(data_to_predict_for_algos)
     our_test_score = collections.Counter(
         predictions[0:future_day] * test_classes[0:future_day]).get(1)
+    our_test_score = 0 if our_test_score is None else our_test_score
     result = {"STOCK: ": STOCK, "future_day": future_day, "our_test_score": our_test_score}
     print(result)
     return result
