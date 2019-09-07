@@ -29,8 +29,8 @@ def getInitial():
 
 
 def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
-    n_estimators = range(10, 110, 10)
-    max_depth = range(10, 110, 10)
+    n_estimators = range(10, 30, 10)
+    max_depth = range(10, 30, 10)
     combinations = []
 
     results = {}
@@ -52,6 +52,7 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
     results["stock"] = STOCK
     results["model"] = top
     final.append(results)
+    print(final)
     return final
 
 
@@ -71,6 +72,7 @@ def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, t
 def runExperiment():
     for STOCK_FILE in os.listdir("data/"):
         zhResults = []
+        rfResults = []
         STOCK = STOCK_FILE.split(".csv")[0]
         print(f"*** Started computations for {STOCK} ***")
 
@@ -79,12 +81,16 @@ def runExperiment():
         data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-100], complete_data[-100:,
                                                                                         :-1], complete_data[-100:, -1]
         for future_day in range(10, 110, 10):
-            finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
+            print(f"Predicting for future days: {future_day}")
+            # finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
+            # rfResults.append(finalRF)
             finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
             zhResults.append(finalZH)
-        with open(f"Results/RF-{STOCK}-results.JSON", 'w') as f:
-            f.write(json.dumps(finalRF))
-        with open(f"Results/ZH/{STOCK}-results.JSON", 'w') as f:
+
+
+        # with open(f"Results/RF/{STOCK}.JSON", 'w') as f:
+        #     f.write(json.dumps(finalRF))
+        with open(f"Results/ZH/{STOCK}.JSON", 'w') as f:
             f.write(json.dumps(zhResults))
 
 
