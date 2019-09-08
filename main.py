@@ -82,14 +82,14 @@ def runExperiment():
                                                                                         :-1], complete_data[-100:, -1]
         for future_day in range(10, 110, 10):
             print(f"Predicting for future days: {future_day}")
-            # finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
-            # rfResults.append(finalRF)
+            finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
+            rfResults.append(finalRF)
             finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
             zhResults.append(finalZH)
 
+        with open(f"Results/RF/{STOCK}.JSON", 'w') as f:
+            f.write(json.dumps(rfResults))
 
-        # with open(f"Results/RF/{STOCK}.JSON", 'w') as f:
-        #     f.write(json.dumps(finalRF))
         with open(f"Results/ZH/{STOCK}.JSON", 'w') as f:
             f.write(json.dumps(zhResults))
 
