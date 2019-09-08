@@ -1,30 +1,35 @@
+import os
+
 import requests
 import time
 import pandas as pd
 
-api_calls = 0
-key = "YOUR_API_KEY"
 
-f = open('TICKR.txt', 'r+')
-lines = f.readlines()
-lines = list(map(lambda x: x.replace('\n', ''), lines))
+def collect_data():
+    api_calls = 0
+    key = "LCH2VOPVMMDBHHB6"
 
-for sym in lines:
-    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={sym}&outputsize=full&apikey={key}=csv"
-    filepath = f"../data/{sym}.csv"
+    f = open('TICKR.txt', 'r+')
+    lines = f.readlines()
+    lines = list(map(lambda x: x.replace('\n', ''), lines))
+    dirname = os.path.dirname(__file__)
 
-    r = requests.get(url=url)
-    api_calls += 1
+    for sym in lines:
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={sym}&apikey={key}&datatype=csv"
+        filepath = os.path.join(dirname, f"../data/{sym}.csv")
 
-    with open(filepath, 'wb') as f:
-        f.write(r.content)
+        r = requests.get(url=url)
+        api_calls += 1
 
-    df = pd.read_csv(filepath)
-    df = df[::-1]
-    print(filepath)
-    df.to_csv(filepath, index=False)
+        with open(filepath, 'wb') as f:
+            f.write(r.content)
 
-    if api_calls % 5 == 0:
-        time.sleep(90)
-    else:
-        time.sleep(5)
+        df = pd.read_csv(filepath)
+        df = df[::-1]
+        print(filepath)
+        df.to_csv(filepath, index=False)
+
+        if api_calls % 5 == 0:
+            time.sleep(90)
+        else:
+            time.sleep(5)

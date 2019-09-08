@@ -1,11 +1,11 @@
 import collections
-
 import json
 from data_prep import data_preparation as dp
 from RandomForest import RF_with_predictions as rf
 import ZeroHour.zerohour as zh
 from functools import reduce
 import os
+import data_prep.data_collection as dc
 
 
 def selectTop3(top3, x):
@@ -94,4 +94,9 @@ def runExperiment():
             f.write(json.dumps(zhResults))
 
 
-runExperiment()
+def collect_data():
+    dc.collect_data()
+
+
+collect_data()
+# runExperiment()
