@@ -7,6 +7,10 @@ from functools import reduce
 import os
 import data_prep.data_collection as dc
 
+window_size = 100
+future_day_start = 100
+future_day_stop = 110
+
 
 def selectTop3(top3, x):
     if x["our_test_score"] > top3[-1]["our_test_score"]:
@@ -29,8 +33,8 @@ def getInitial():
 
 
 def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
-    n_estimators = range(10, 30, 10)
-    max_depth = range(10, 30, 10)
+    n_estimators = range(10, 110, 10)
+    max_depth = range(10, 110, 10)
     combinations = []
 
     results = {}
@@ -76,16 +80,26 @@ def runExperiment():
         STOCK = STOCK_FILE.split(".csv")[0]
         print(f"*** Started computations for {STOCK} ***")
 
-        df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}", 100).data_frame_with_features()
+        df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}",
+                                                         window_size=window_size).data_frame_with_features()
         complete_data = df.to_numpy()
-        data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-100], complete_data[-100:,
-                                                                                        :-1], complete_data[-100:, -1]
-        for future_day in range(10, 110, 10):
+        data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-window_size], complete_data[
+                                                                                                -window_size:,
+                                                                                                :-1], complete_data[
+                                                                                                      -window_size:, -1]
+        for future_day in range(future_day_start, future_day_stop, 10):
             print(f"Predicting for future days: {future_day}")
-            finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
-            rfResults.append(finalRF)
-            finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
-            zhResults.append(finalZH)
+            try:
+                finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
+                rfResults.append(finalRF)
+            except EnvironmentError as error:
+                rfResults.append({"our_test_score": 0, "cause": "error"})
+                continue
+            try:
+                finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
+                zhResults.append(finalZH)
+            except:
+                zhResults.append({"our_test_score": 0, "cause": "error"})
 
         with open(f"Results/RF/{STOCK}.JSON", 'w') as f:
             f.write(json.dumps(rfResults))
@@ -98,5 +112,5 @@ def collect_data():
     dc.collect_data()
 
 
-collect_data()
-# runExperiment()
+# collect_data()
+runExperiment()
