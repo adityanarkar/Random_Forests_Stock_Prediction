@@ -7,7 +7,7 @@ import pandas as pd
 
 def collect_data():
     api_calls = 0
-    key = "LCH2VOPVMMDBHHB6"
+    key = "YOUR_KEY_HERE"
 
     f = open('TICKR.txt', 'r+')
     lines = f.readlines()
@@ -15,7 +15,7 @@ def collect_data():
     dirname = os.path.dirname(__file__)
 
     for sym in lines:
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={sym}&apikey={key}&datatype=csv"
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={sym}&outputsize=full&apikey={key}&datatype=csv"
         filepath = os.path.join(dirname, f"../data/{sym}.csv")
 
         r = requests.get(url=url)
