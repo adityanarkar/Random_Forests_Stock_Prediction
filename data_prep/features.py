@@ -78,7 +78,6 @@ def RSI(df: pd.DataFrame):
     df["RSI"] = df["GL"].rolling(window=14).apply(lambda x: calculateRSI(x))
     df.drop(columns=["GL"], inplace=True)
     df.dropna(inplace=True)
-    print(df.tail())
     return df
 
 
@@ -143,7 +142,6 @@ def CCI(df: pd.DataFrame, window):
 
     df[f"{window}-day-mean-deviation"] = abs(df["TP"] - df[f"{window}-day-SMA-TP"])
     df["CCI"] = (df["TP"] - df[f"{window}-day-SMA-TP"]) / (0.15 * df[f"{window}-day-mean-deviation"])
-    print(df.head())
     df.drop(inplace=True, columns=[f"{window}-day-SMA-TP", f"{window}-day-mean-deviation", "TP"])
 
 
@@ -188,7 +186,6 @@ def entropy(df: pd.DataFrame, window_size: int):
         .rolling(window=window_size) \
         .apply(lambda x: sc.entropy(x))
     df.dropna(inplace=True)
-    print(df.head())
 
 
 def checkValue(value):
