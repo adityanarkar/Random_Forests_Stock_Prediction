@@ -1,17 +1,22 @@
 import collections
 import json
+
+import numpy as np
+
 from data_prep import data_preparation as dp
 from RandomForest import RF_with_predictions as rf
+import sklearn.dummy as dummy
 import ZeroHour.zerohour as zh
 from functools import reduce
 import os
 import data_prep.data_collection as dc
 
-# window_size = 100
 future_day_start = 10
 future_day_stop = 110
-estimator_end = 50
-depth = 50
+estimator_end = 100
+depth = 100
+initial_no_of_features = 10
+max_features = 23
 common_path = "Results/Selection"
 
 
@@ -48,7 +53,7 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
             model_score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features)
             predictions = model_score[0].predict(data_to_predict_for_algos)
             our_test_score = collections.Counter(
-                predictions[0:future_day] * test_classes[0:future_day]).get(1)
+                predictions * test_classes).get(1)
             our_test_score = 0 if our_test_score is None else our_test_score
             tuple_to_save = {"estimators": i, "max_depth": j, "model_score": model_score[1],
                              "future_days": future_day,
@@ -63,9 +68,10 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
 
 
 def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
-    model = zh.zeroHour()
-    model.fit(data_for_algos)
-    print(model.prediction_class)
+    model = dummy.DummyClassifier(strategy="most_frequent")
+    X = np.asarray(list(map(lambda row: row[:-1], data_for_algos)))
+    y = np.asarray(list(map(lambda row: row[-1], data_for_algos)))
+    model.fit(X, y)
     predictions = model.predict(data_to_predict_for_algos)
     our_test_score = collections.Counter(
         predictions[0:future_day] * test_classes[0:future_day]).get(1)
@@ -108,7 +114,7 @@ def runExperiment(tickrs):
                     data_for_algos, data_to_predict_for_algos, test_classes = get_prepared_data(STOCK_FILE, future_day)
                 except:
                     continue
-                for no_of_features in range(17, 22, 1):
+                for no_of_features in range(initial_no_of_features, max_features, 1):
                     print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
                     try:
                         finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
