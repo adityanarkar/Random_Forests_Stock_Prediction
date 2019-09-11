@@ -1,5 +1,4 @@
 import os
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import json
@@ -36,23 +35,26 @@ def drawOutput(stock, rfScore, zhScore, labels):
 
 
 def getZHResultsFromFile(filepath):
-    results = []
+    # results = []
     with open(filepath, 'r') as f:
         data = json.load(f)
         for i in range(len(data)):
-            score = data[i]["our_test_score"]
-            results.append(score)
-    return results
+            return data[i]["our_test_score"]
+            # results.append(score)
+    # return results
 
 
 def getRFResultsFromFile(filepath):
-    results = []
+    # results = []
     with open(filepath, 'r') as f:
         data = json.load(f)
         for i in range(len(data)):
-            score = data[i]["model"]["our_test_score"]
-            results.append(score)
-    return results
+            if "model" in data[i].keys():
+                return data[i]["model"]["our_test_score"]
+            else:
+                return 0
+            # results.append(score)
+    # return results
 
 
 def prepareData(rfResultsDir, zhResultsDir, listOfStocks):
@@ -68,10 +70,32 @@ def prepareData(rfResultsDir, zhResultsDir, listOfStocks):
             print(f"File {zhFilePath} or {rfFilePath} does not exist.")
 
 
-stocks = []
+def prepare_data_all_stock_with_selection(rfResultsDir, zhResultsDir, listOfStocks):
+    all_zh_results = []
+    all_rf_results = []
+    for tickr in listOfStocks:
+        zhFilePath = os.path.join(zhResultsDir, f"{tickr}.JSON")
+        rfFilePath = os.path.join(rfResultsDir, f"{tickr}.JSON")
+        if os.path.isfile(zhFilePath) and os.path.isfile(rfFilePath):
+            zhRes = getZHResultsFromFile(zhFilePath)
+            all_zh_results.append(zhRes)
+            rfRes = getRFResultsFromFile(rfFilePath)
+            all_rf_results.append(rfRes)
+        else:
+            print(f"File {zhFilePath} or {rfFilePath} does not exist.")
+        all_zh_results = [0 if x is None else x for x in all_zh_results]
+    drawOutput("All stocks", all_rf_results, all_zh_results, listOfStocks)
 
-with open("TICKR.txt", 'r') as f:
-    for line in f.readlines():
-        stocks.append(line.replace("\n",""))
 
-prepareData("./Results/RF", "./Results/ZH", stocks)
+# prepareData("./Results/RF", "./Results/ZH", main.get_requested_tickrs())
+
+def get_requested_tickrs():
+    result = []
+    with open("TICKR.txt") as f:
+        for line in f.readlines():
+            if not line.startswith("#"):
+                result.append(line.replace("\n", ""))
+    return result
+
+
+prepare_data_all_stock_with_selection("./Results/Selection/RF", "./Results/Selection/ZH", get_requested_tickrs())

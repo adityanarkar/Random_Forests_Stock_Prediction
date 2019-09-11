@@ -33,8 +33,8 @@ def getInitial():
 
 
 def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
-    n_estimators = range(10, 110, 10)
-    max_depth = range(10, 110, 10)
+    n_estimators = range(10, 40, 10)
+    max_depth = range(10, 40, 10)
     combinations = []
 
     results = {}
@@ -55,9 +55,8 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
     top = reduce(lambda acc, x: selectTop(acc, x), combinations, {"our_test_score": 0})
     results["stock"] = STOCK
     results["model"] = top
-    final.append(results)
-    print(final)
-    return final
+    print(results)
+    return results
 
 
 def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
@@ -73,44 +72,63 @@ def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, t
     return result
 
 
-def runExperiment():
+def runExperiment(tickrs):
     for STOCK_FILE in os.listdir("data/"):
         zhResults = []
         rfResults = []
         STOCK = STOCK_FILE.split(".csv")[0]
-        print(f"*** Started computations for {STOCK} ***")
+        if STOCK in tickrs:
+            print(f"*** Started computations for {STOCK} ***")
+            try:
+                df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}",
+                                                                 window_size=window_size).data_frame_with_features()
+                complete_data = df.to_numpy()
 
-        df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}",
-                                                         window_size=window_size).data_frame_with_features()
-        complete_data = df.to_numpy()
-        data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-window_size], complete_data[
-                                                                                                -window_size:,
-                                                                                                :-1], complete_data[
-                                                                                                      -window_size:, -1]
-        for future_day in range(future_day_start, future_day_stop, 10):
-            print(f"Predicting for future days: {future_day}")
-            try:
-                finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
-                rfResults.append(finalRF)
-            except EnvironmentError as error:
-                rfResults.append({"our_test_score": 0, "cause": "error"})
-                continue
-            try:
-                finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
-                zhResults.append(finalZH)
+                data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-window_size], complete_data[
+                                                                                                    -window_size:,
+                                                                                                    :-1], complete_data[
+                                                                                                          -window_size:,
+                                                                                                          -1]
             except:
-                zhResults.append({"our_test_score": 0, "cause": "error"})
+                continue
+            for future_day in range(future_day_start, future_day_stop, 10):
+                print(f"Predicting for future days: {future_day}")
+                try:
+                    finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+                                                test_classes)
+                    rfResults.append(finalRF)
+                except:
+                    rfResults.append({"our_test_score": 0, "cause": "error"})
+                    continue
+                try:
+                    finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
+                    zhResults.append(finalZH)
+                except:
+                    zhResults.append({"our_test_score": 0, "cause": "error"})
 
-        with open(f"Results/RF/{STOCK}.JSON", 'w') as f:
-            f.write(json.dumps(rfResults))
+            with open(f"Results/RF/{STOCK}.JSON", 'w') as f:
+                f.write(json.dumps(rfResults))
 
-        with open(f"Results/ZH/{STOCK}.JSON", 'w') as f:
-            f.write(json.dumps(zhResults))
-
-
-def collect_data():
-    dc.collect_data()
+            with open(f"Results/ZH/{STOCK}.JSON", 'w') as f:
+                f.write(json.dumps(zhResults))
+        else:
+            pass
 
 
-# collect_data()
-runExperiment()
+def collect_data(no_of_symbols: int, filepath: str):
+    dc.sample_data(no_of_symbols, filepath)
+    dc.collect_data(filepath)
+
+
+def get_requested_tickrs(filepath):
+    result = []
+    with open(filepath) as f:
+        for line in f.readlines():
+            if not line.startswith("#"):
+                result.append(line.replace("\n", ""))
+    return result
+
+
+tickr_file = "data/TICKR.txt"
+# collect_data(300, tickr_file)
+runExperiment(get_requested_tickrs(tickr_file))

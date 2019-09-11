@@ -1,15 +1,14 @@
 import os
-
+import numpy as np
 import requests
 import time
 import pandas as pd
 
 
-def collect_data():
+def collect_data(tickrs_file):
     api_calls = 0
     key = "YOUR_KEY_HERE"
-
-    f = open('TICKR.txt', 'r+')
+    f = open(tickrs_file, 'r+')
     lines = f.readlines()
     lines = list(map(lambda x: x.replace('\n', ''), lines))
     dirname = os.path.dirname(__file__)
@@ -33,3 +32,12 @@ def collect_data():
             time.sleep(90)
         else:
             time.sleep(5)
+
+
+def sample_data(no_of_symbols: int, filepath: str):
+    file = pd.read_csv('data/More_data/companylist.csv')
+    file = file["Symbol"].apply(lambda x: x if not "^" in x and not "." in x else np.nan)
+    file.dropna(inplace=True)
+    file = file.sample(n=no_of_symbols)
+    file.to_csv(filepath, index=False, header=False)
+    return file
