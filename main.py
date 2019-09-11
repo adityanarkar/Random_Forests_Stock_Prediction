@@ -7,9 +7,12 @@ from functools import reduce
 import os
 import data_prep.data_collection as dc
 
-window_size = 100
-future_day_start = 100
+# window_size = 100
+future_day_start = 10
 future_day_stop = 110
+estimator_end = 50
+depth = 50
+common_path = "Results/Selection"
 
 
 def selectTop3(top3, x):
@@ -32,9 +35,9 @@ def getInitial():
     return initial
 
 
-def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
-    n_estimators = range(10, 40, 10)
-    max_depth = range(10, 40, 10)
+def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes, no_of_features):
+    n_estimators = range(10, estimator_end, 10)
+    max_depth = range(10, depth, 10)
     combinations = []
 
     results = {}
@@ -42,7 +45,7 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
 
     for i in n_estimators:
         for j in max_depth:
-            model_score = rf.random_forest_classifier(data_for_algos, i, j)
+            model_score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features)
             predictions = model_score[0].predict(data_to_predict_for_algos)
             our_test_score = collections.Counter(
                 predictions[0:future_day] * test_classes[0:future_day]).get(1)
@@ -72,6 +75,26 @@ def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, t
     return result
 
 
+def create_dir_and_store_result(dir_to_create, result_path, result):
+    if not os.path.isdir(dir_to_create):
+        os.mkdir(dir_to_create)
+        with open(result_path, 'w') as f:
+            f.write(json.dumps(result))
+
+
+def get_prepared_data(STOCK_FILE, window_size):
+    df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}",
+                                                     window_size=window_size).data_frame_with_features()
+    complete_data = df.to_numpy()
+
+    data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-window_size], complete_data[
+                                                                                            -window_size:,
+                                                                                            :-1], complete_data[
+                                                                                                  -window_size:,
+                                                                                                  -1]
+    return data_for_algos, data_to_predict_for_algos, test_classes
+
+
 def runExperiment(tickrs):
     for STOCK_FILE in os.listdir("data/"):
         zhResults = []
@@ -79,38 +102,42 @@ def runExperiment(tickrs):
         STOCK = STOCK_FILE.split(".csv")[0]
         if STOCK in tickrs:
             print(f"*** Started computations for {STOCK} ***")
-            try:
-                df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}",
-                                                                 window_size=window_size).data_frame_with_features()
-                complete_data = df.to_numpy()
 
-                data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-window_size], complete_data[
-                                                                                                    -window_size:,
-                                                                                                    :-1], complete_data[
-                                                                                                          -window_size:,
-                                                                                                          -1]
-            except:
-                continue
             for future_day in range(future_day_start, future_day_stop, 10):
-                print(f"Predicting for future days: {future_day}")
                 try:
-                    finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-                                                test_classes)
-                    rfResults.append(finalRF)
+                    data_for_algos, data_to_predict_for_algos, test_classes = get_prepared_data(STOCK_FILE, future_day)
                 except:
-                    rfResults.append({"our_test_score": 0, "cause": "error"})
                     continue
-                try:
-                    finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes)
-                    zhResults.append(finalZH)
-                except:
-                    zhResults.append({"our_test_score": 0, "cause": "error"})
+                for no_of_features in range(17, 22, 1):
+                    print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
+                    try:
+                        finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+                                                    test_classes, no_of_features)
+                        rfResults.append(finalRF)
+                    except:
+                        rfResults.append({"our_test_score": 0, "cause": "error"})
+                        continue
 
-            with open(f"Results/RF/{STOCK}.JSON", 'w') as f:
-                f.write(json.dumps(rfResults))
+                    try:
+                        finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+                                               test_classes)
+                        zhResults.append(finalZH)
+                    except:
+                        zhResults.append({"our_test_score": 0, "cause": "error"})
 
-            with open(f"Results/ZH/{STOCK}.JSON", 'w') as f:
-                f.write(json.dumps(zhResults))
+                    rf_path = f"{common_path}-{no_of_features}-MD_E_{depth}-302_TICKS-FD_{future_day}/RF/"
+                    zh_path = f"{common_path}-{no_of_features}-MD_E_{depth}_302_TICKS-FD_{future_day}/ZH/"
+
+                    if not os.path.exists(rf_path):
+                        os.makedirs(rf_path)
+                    with open(f"{rf_path}/{STOCK}.JSON", 'w') as f:
+                        f.write(json.dumps(rfResults))
+
+                    if not os.path.exists(zh_path):
+                        os.makedirs(zh_path)
+                    with open(f"{zh_path}/{STOCK}.JSON", 'w') as f:
+                        f.write(json.dumps(zhResults))
+
         else:
             pass
 
