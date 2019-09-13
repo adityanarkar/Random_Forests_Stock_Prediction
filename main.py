@@ -40,13 +40,20 @@ def getInitial():
     return initial
 
 
+def get_top_rf_result_csv_format(STOCK, top, no_of_features):
+    top_estimator = top["estimators"]
+    top_depth = top['max_depth']
+    top_model_score = top['model_score']
+    top_future_day = top['future_day']
+    top_our_test_score = top['our_test_score']
+    result = f"{STOCK},RF,{top_estimator},{top_depth},{no_of_features},{top_model_score},{top_future_day},{top_our_test_score}\n"
+    return result
+
+
 def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes, no_of_features):
     n_estimators = range(10, estimator_end, 10)
     max_depth = range(10, depth, 10)
     combinations = []
-
-    results = {}
-    final = []
 
     for i in n_estimators:
         for j in max_depth:
@@ -56,15 +63,14 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
                 predictions * test_classes).get(1)
             our_test_score = 0 if our_test_score is None else our_test_score
             tuple_to_save = {"estimators": i, "max_depth": j, "model_score": model_score[1],
-                             "future_days": future_day,
+                             "future_day": future_day,
                              "our_test_score": our_test_score}
             combinations.append(tuple_to_save)
 
     top = reduce(lambda acc, x: selectTop(acc, x), combinations, {"our_test_score": 0})
-    results["stock"] = STOCK
-    results["model"] = top
-    print(results)
-    return results
+    result = get_top_rf_result_csv_format(STOCK, top, no_of_features)
+    print(f"final Result RF: {result}")
+    return result
 
 
 def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
@@ -76,7 +82,8 @@ def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, t
     our_test_score = collections.Counter(
         predictions[0:future_day] * test_classes[0:future_day]).get(1)
     our_test_score = 0 if our_test_score is None else our_test_score
-    result = {"STOCK: ": STOCK, "future_day": future_day, "our_test_score": our_test_score}
+
+    result = f"{STOCK},ZR,0,0,0,0,{future_day},{our_test_score}\n"
     print(result)
     return result
 
@@ -101,48 +108,49 @@ def get_prepared_data(STOCK_FILE, window_size):
     return data_for_algos, data_to_predict_for_algos, test_classes
 
 
+def write_result_to_file(RESULT_FILE, result):
+    with open(RESULT_FILE, 'a') as f:
+        f.write(result)
+
+
+def add_headers(RESULT_FILE):
+    with open(RESULT_FILE, 'w') as f:
+        f.write("Stock,Algorithm,Estimators,Depth,No_of_features,Model_Score,Future_day,Our_test_score\n")
+
 def runExperiment(tickrs):
+    RESULT_FILE = "Results/result.csv"
+    add_headers(RESULT_FILE)
     for STOCK_FILE in os.listdir("data/"):
-        zhResults = []
-        rfResults = []
         STOCK = STOCK_FILE.split(".csv")[0]
         if STOCK in tickrs:
             print(f"*** Started computations for {STOCK} ***")
 
             for future_day in range(future_day_start, future_day_stop, 10):
-                try:
-                    data_for_algos, data_to_predict_for_algos, test_classes = get_prepared_data(STOCK_FILE, future_day)
-                except:
-                    continue
+                result = ""
+                # try:
+                data_for_algos, data_to_predict_for_algos, test_classes = get_prepared_data(STOCK_FILE, future_day)
+                # except:
+                #     continue
                 for no_of_features in range(initial_no_of_features, max_features, 1):
                     print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
                     try:
-                        finalRF = testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+                        result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
                                                     test_classes, no_of_features)
-                        rfResults.append(finalRF)
                     except:
-                        rfResults.append({"our_test_score": 0, "cause": "error"})
+                        result += f"{STOCK},RF,0,0,0,0,{future_day},0\n"
                         continue
 
-                    try:
-                        finalZH = testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-                                               test_classes)
-                        zhResults.append(finalZH)
-                    except:
-                        zhResults.append({"our_test_score": 0, "cause": "error"})
+                try:
+                    result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+                                           test_classes)
+                except:
+                    result += f"{STOCK},ZR,0,0,0,0,{future_day},0\n"
 
-                    rf_path = f"{common_path}-{no_of_features}-MD_E_{depth}-302_TICKS-FD_{future_day}/RF/"
-                    zh_path = f"{common_path}-{no_of_features}-MD_E_{depth}_302_TICKS-FD_{future_day}/ZH/"
-
-                    if not os.path.exists(rf_path):
-                        os.makedirs(rf_path)
-                    with open(f"{rf_path}/{STOCK}.JSON", 'w') as f:
-                        f.write(json.dumps(rfResults))
-
-                    if not os.path.exists(zh_path):
-                        os.makedirs(zh_path)
-                    with open(f"{zh_path}/{STOCK}.JSON", 'w') as f:
-                        f.write(json.dumps(zhResults))
+                try:
+                    write_result_to_file(RESULT_FILE, result)
+                except:
+                    print("Error while writing to a file.")
+                    continue
 
         else:
             pass

@@ -43,6 +43,10 @@ class data_preparation(object):
         features.skewness(df, 90)
         features.kurtosis(df, 90)
         features.entropy(df, 90)
+        features.fourier_transform_min(df, 90)
+        features.fourier_transform_max(df, 90)
+        features.fourier_transform_mean(df, 90)
+        df.dropna(inplace=True)
         # features.CCI(df, 20)
 
         df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)

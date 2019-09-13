@@ -175,8 +175,8 @@ def skewness(df: pd.DataFrame, window_size):
 
 
 def kurtosis(df: pd.DataFrame, window_size: int):
-    df["kurtosis"] = df["adjusted_close"]\
-        .rolling(window=window_size)\
+    df["kurtosis"] = df["adjusted_close"] \
+        .rolling(window=window_size) \
         .apply(lambda x: sc.kurtosis(x))
     df.dropna(inplace=True)
 
@@ -186,6 +186,19 @@ def entropy(df: pd.DataFrame, window_size: int):
         .rolling(window=window_size) \
         .apply(lambda x: sc.entropy(x))
     df.dropna(inplace=True)
+
+
+def fourier_transform_min(df: pd.DataFrame, window_size):
+    df["fft_min"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: np.min(np.absolute(np.fft.fft(x))))
+
+
+def fourier_transform_max(df: pd.DataFrame, window_size):
+    df["fft_max"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: np.max(np.absolute(np.fft.fft(x))))
+
+
+def fourier_transform_mean(df: pd.DataFrame, window_size):
+    df["fft_mean"] = df["adjusted_close"].rolling(window=window_size).apply(
+        lambda x: np.mean(np.absolute(np.fft.fft(x))))
 
 
 def checkValue(value):
