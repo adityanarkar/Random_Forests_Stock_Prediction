@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 def clean_dataframe(df: pd.DataFrame):
     return df[df['Our_test_score'] != 'error']
 
