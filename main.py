@@ -1,14 +1,14 @@
-import collections
 import json
-from multiprocessing import Lock
-import numpy as np
-from filelock import FileLock
-from data_prep import data_preparation as dp
-from RandomForest import RF_with_predictions as rf
-import sklearn.dummy as dummy
-from functools import reduce
 import os
+from functools import reduce
+
+import numpy as np
+import sklearn.dummy as dummy
+
 import data_prep.data_collection as dc
+from RandomForest import RF_with_predictions as rf
+from SVM import svm
+from data_prep import data_preparation as dp
 
 future_day_start = 10
 future_day_stop = 110
@@ -16,7 +16,8 @@ estimator_end = 60
 depth = 60
 initial_no_of_features = 20
 max_features = 21
-common_path = "Results/Selection"
+feature_window_size = 50
+discretize = False
 
 
 def selectTop3(top3, x):
@@ -49,7 +50,8 @@ def get_top_rf_result_csv_format(STOCK, top, no_of_features):
     return result
 
 
-def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes, no_of_features):
+def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes, no_of_features,
+                      actual_data_to_predict):
     try:
         n_estimators = range(10, estimator_end, 10)
         max_depth = range(10, depth, 10)
@@ -59,8 +61,8 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
             for j in max_depth:
                 model_score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features)
                 predictions = model_score[0].predict(data_to_predict_for_algos)
-                our_test_score = collections.Counter(
-                    predictions * test_classes).get(1)
+                our_test_score = sum([1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
+                # print(our_test_score)
                 our_test_score = 0 if our_test_score is None else our_test_score
                 tuple_to_save = {"estimators": i, "max_depth": j, "model_score": model_score[1],
                                  "future_day": future_day,
@@ -82,8 +84,9 @@ def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, t
         y = np.asarray(list(map(lambda row: row[-1], data_for_algos)))
         model.fit(X, y)
         predictions = model.predict(data_to_predict_for_algos)
-        our_test_score = collections.Counter(
-            predictions[0:future_day] * test_classes[0:future_day]).get(1)
+        # our_test_score = collections.Counter(
+        #     predictions[0:future_day] * test_classes[0:future_day]).get(1)
+        our_test_score = sum([1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
         our_test_score = 0 if our_test_score is None else our_test_score
 
         result = f"{STOCK},ZR,0,0,0,0,{future_day},{our_test_score}\n"
@@ -101,9 +104,11 @@ def create_dir_and_store_result(dir_to_create, result_path, result):
             f.write(json.dumps(result))
 
 
-def get_prepared_data(STOCK_FILE, window_size):
+def get_prepared_data(STOCK_FILE, window_size, feature_window_size, discretize):
     df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}",
-                                                     window_size=window_size).data_frame_with_features()
+                                                     window_size=window_size,
+                                                     feature_window_size=feature_window_size,
+                                                     discretize=discretize).data_frame_with_features()
     complete_data = df.to_numpy()
 
     data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-window_size], complete_data[
@@ -111,7 +116,7 @@ def get_prepared_data(STOCK_FILE, window_size):
                                                                                             :-1], complete_data[
                                                                                                   -window_size:,
                                                                                                   -1]
-    return data_for_algos, data_to_predict_for_algos, test_classes
+    return data_for_algos, data_to_predict_for_algos, test_classes, actual_data_to_predict
 
 
 def write_result_to_file(lock, RESULT_FILE, result):
@@ -123,9 +128,20 @@ def write_result_to_file(lock, RESULT_FILE, result):
     lock.release()
 
 
+def make_missing_dirs(path):
+    head, tail = os.path.split(path)
+    if not os.path.exists(head):
+        os.makedirs(head)
+
+
 def add_headers(RESULT_FILE):
     with open(RESULT_FILE, 'w') as f:
         f.write("Stock,Algorithm,Estimators,Depth,No_of_features,Model_Score,Future_day,Our_test_score\n")
+
+
+def testSVM(data_for_algos, data_to_predict_for_algos, test_classes, no_of_features):
+    clf, score = svm.svm_classifier(data_for_algos, no_of_features)
+    print(score)
 
 
 def runExperiment(lock, STOCK_FILE, RESULT_FILE):
@@ -135,18 +151,19 @@ def runExperiment(lock, STOCK_FILE, RESULT_FILE):
     result = ""
     for future_day in range(future_day_start, future_day_stop, 10):
         try:
-            data_for_algos, data_to_predict_for_algos, test_classes = get_prepared_data(STOCK_FILE, future_day)
+            data_for_algos, data_to_predict_for_algos, test_classes, actual_data_to_predict = get_prepared_data(
+                STOCK_FILE, future_day, feature_window_size, discretize)
         except:
             continue
         for no_of_features in range(initial_no_of_features, max_features, 1):
             print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
             result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-                                        test_classes, no_of_features)
+                                        test_classes, no_of_features, actual_data_to_predict)
 
         result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
                                test_classes)
 
-    write_result_to_file(lock, RESULT_FILE, result)
+        write_result_to_file(lock, RESULT_FILE, result)
 
 
 def collect_data(no_of_symbols: int, filepath: str):

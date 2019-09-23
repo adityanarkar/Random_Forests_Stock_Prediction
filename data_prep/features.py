@@ -59,6 +59,7 @@ def stochasticK(df: pd.DataFrame, moving_window, discretize: bool):
     if discretize:
         df["StochasticK"] = df["StochasticK"].rolling(window=2).apply(lambda x: discretizeOscillator(x))
     df.dropna(inplace=True)
+    return df
 
 
 def stochasticD(df: pd.DataFrame, moving_window, discretize: bool):
@@ -69,15 +70,29 @@ def stochasticD(df: pd.DataFrame, moving_window, discretize: bool):
             df["StochasticD"] = df["StochasticD"].rolling(window=2).apply(lambda x: discretizeOscillator(x))
         df.dropna(inplace=True)
     else:
-        return stochasticD(stochasticK(df, moving_window), moving_window, discretize)
+        return stochasticD(stochasticK(df, moving_window, discretize), moving_window, discretize)
 
 
-def RSI(df: pd.DataFrame):
+def discretizeRSI(rsi):
+    if rsi[-1] >= 70:
+        return -1
+    elif rsi[-1] <= 30:
+        return 1
+    elif rsi[-1] >= rsi[0]:
+        return 1
+    else:
+        return -1
+
+
+def RSI(df: pd.DataFrame, discretize: bool):
     df["GL"] = df["adjusted_close"].rolling(window=2).apply(lambda x: x[0] - x[1])
     df.dropna(inplace=True)
     df["RSI"] = df["GL"].rolling(window=14).apply(lambda x: calculateRSI(x))
     df.drop(columns=["GL"], inplace=True)
     df.dropna(inplace=True)
+    if discretize:
+        df["RSI"] = df["RSI"].rolling(window=2).apply(lambda x: discretizeRSI(x))
+        df.dropna(inplace=True)
     return df
 
 

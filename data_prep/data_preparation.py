@@ -4,9 +4,11 @@ from data_prep import features
 
 class data_preparation(object):
 
-    def __init__(self, filepath: str, window_size: int):
+    def __init__(self, filepath: str, window_size: int, feature_window_size: int, discretize: bool):
         self.filepath = filepath
         self.window = window_size
+        self.feature_window_size = feature_window_size
+        self.discretize = discretize
 
     def get_data(self, filepath: str) -> pd.DataFrame:
         return pd.read_csv(filepath)
@@ -14,6 +16,27 @@ class data_preparation(object):
     def create_label(self, row):
         row['class'] = 1 if row['adjusted_close'] < row['shifted_value'] else -1
         return row
+
+    def calculate_label_profit_loss(self, x):
+        minimum = min(x)
+        maximum = max(x)
+        value = x[0]
+
+        thresh_positive = value + value * 0.05
+        thresh_negative = value - value * 0.05
+
+        if maximum >= thresh_positive or minimum <= thresh_negative:
+            for i in x:
+                if i >= thresh_positive:
+                    return 1
+                elif i <= thresh_negative:
+                    return -1
+        else:
+            return 0
+
+    def create_label_profit_loss(self, df: pd.DataFrame, window):
+        df['class'] = df['adjusted_close'].rolling(window=window).apply(lambda x: self.calculate_label_profit_loss(x))
+        df['class'] = df['class'].shift(window - 1)
 
     def get_fresh_data_for_prediction(self, df: pd.DataFrame):
         result = df.where(df['shifted_value'].isna())
@@ -26,16 +49,16 @@ class data_preparation(object):
         df.drop(columns=["timestamp"], inplace=True)
         df.dropna(inplace=True)
 
-        features.simpleMA(df, self.window, True)
-        features.weightedMA(df, self.window, True)
-        features.EMA(df, self.window, True)
-        features.momentum(df, self.window)
-        features.stochasticK(df, self.window, True)
-        features.stochasticD(df, self.window, True)
-        features.MACD(df, True)
-        features.RSI(df)
-        features.williamsR(df, 9, True)
-        features.ADIndicator(df)
+        features.simpleMA(df, self.feature_window_size, self.discretize)
+        features.weightedMA(df, self.feature_window_size, self.discretize)
+        features.EMA(df, self.feature_window_size, self.discretize)
+        features.momentum(df, self.feature_window_size)
+        features.stochasticK(df, self.feature_window_size, self.discretize)
+        features.stochasticD(df, self.feature_window_size, self.discretize)
+        features.MACD(df, self.discretize)
+        features.RSI(df, self.discretize)
+        features.williamsR(df, 9, self.discretize)
+        # features.ADIndicator(df)
         features.diff_n_Months(df, 90)
         features.diff_current_lowest_low(df, 90)
         features.diff_current_highest_high(df, 90)
@@ -51,7 +74,8 @@ class data_preparation(object):
 
         df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)
         data_to_predict = self.get_fresh_data_for_prediction(df)
-        df = df.apply(lambda x: self.create_label(x), axis=1)
+        # df = df.apply(lambda x: self.create_label(x), axis=1)
+        self.create_label_profit_loss(df, self.window)
         df.dropna(inplace=True)
         df.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient'], inplace=True)
         data_to_predict.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient'], inplace=True)
