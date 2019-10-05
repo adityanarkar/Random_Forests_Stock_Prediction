@@ -1,7 +1,9 @@
 import multiprocessing
+import os, random
 from multiprocessing import Process, Lock
+
 import main
-import os
+import main_updated
 
 
 def f(l, i):
@@ -13,17 +15,23 @@ def f(l, i):
 if __name__ == '__main__':
     max_cpus = multiprocessing.cpu_count()
     lock = Lock()
+    completed = []
 
-    RESULT_FILE = "Results/result-parallel.csv"
-    COMPLETED_FILE = "Results/completed.qwe"
+    RESULT_FILE = "Results/Test/Shuffle/Discretize/result_parallel_up_down.csv"
+    COMPLETED_FILE = "Results/Test/Shuffle/Discretize/completed_up_down.qwe"
+    main.make_missing_dirs(RESULT_FILE)
+    main.make_missing_dirs(COMPLETED_FILE)
+
     main.add_headers(RESULT_FILE)
-    completed = open(COMPLETED_FILE, 'r').readlines()
-    print(completed)
-
+    algos = ['RF']
     processes = []
-    for filename in os.listdir("data/"):
-        if not filename in completed:
-            p = Process(target=main.runExperiment, args=(lock, filename, RESULT_FILE))
+    counter = 0
+    files = os.listdir('data/')
+    random.shuffle(files)
+    for filename in files:
+        if not filename in completed and counter < 100:
+            counter += 1
+            p = Process(target=main_updated.runExperiment, args=(lock, filename, RESULT_FILE, algos))
             p.start()
             processes.append({"process": p, "stock": filename})
             if len(processes) % 8 == 0:

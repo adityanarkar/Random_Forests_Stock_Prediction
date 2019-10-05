@@ -1,5 +1,5 @@
 import pandas as pd
-from data_prep import features
+from data_prep import features_disc as features
 
 
 class data_preparation(object):
