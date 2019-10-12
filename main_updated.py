@@ -11,14 +11,15 @@ from RandomForest import RF_with_predictions as rf
 from SVM import svm
 from data_prep import data_preparation as dp
 
-future_day_start = 10
-future_day_stop = 110
-estimator_end = 60
-depth = 60
-initial_no_of_features = 22
-max_features = 23
-feature_window_size = 50
-discretize = True
+
+# future_day_start = 10
+# future_day_stop = 110
+# estimator_end = 60
+# depth = 60
+# initial_no_of_features = 22
+# max_features = 23
+# feature_window_size = 50
+# discretize = True
 
 
 def selectTop3(top3, x):
@@ -41,45 +42,51 @@ def getInitial():
     return initial
 
 
-def get_top_rf_result_csv_format(STOCK, top, shuffle):
+def get_top_rf_result_csv_format(STOCK, top):
     top_estimator = top["estimators"]
     top_depth = top['max_depth']
     top_model_score = top['model_score']
     top_future_day = top['future_day']
     top_our_test_score = top['our_test_score']
-    result = result_in_csv(STOCK, 'RF', top_estimator, top_depth, No_of_features=shuffle,
+    top_no_of_features = top['no_of_features']
+    result = result_in_csv(STOCK, 'RF', top_estimator, top_depth, No_of_features=top_no_of_features,
                            Model_Score=top_model_score, Future_day=top_future_day, Our_test_score=top_our_test_score)
     return result
 
 
-def result_in_csv(STOCK, Algo, Estimator=0, Depth=0, Distance_function=0, No_of_features=False, Model_Score=0, Future_day=0,
+def result_in_csv(STOCK, Algo, Estimator=0, Depth=0, Distance_function='0', No_of_features=0, Model_Score=0,
+                  Future_day=0, C=-1,
                   Our_test_score=0):
-    return f"{STOCK},{Algo},{Estimator},{Depth},{Distance_function},{No_of_features},{Model_Score},{Future_day},{Our_test_score}\n "
+    return f"{STOCK},{Algo},{Estimator},{Depth},{Distance_function},{No_of_features},{Model_Score},{Future_day},{C},{Our_test_score}\n "
 
 
-def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes, shuffle,
-                      actual_data_to_predict):
-    n_estimators = range(10, estimator_end, 10)
-    max_depth = range(10, depth, 10)
+def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes,
+                      actual_data_to_predict, estimator_start, estimator_stop, depth_start, depth_stop,
+                      initial_no_of_features, max_features):
+    n_estimators = range(estimator_start, estimator_stop, 10)
+    max_depth = range(depth_start, depth_stop, 10)
     combinations = []
-
-    for i in n_estimators:
-        for j in max_depth:
-            try:
-                model_score = rf.random_forest_classifier(data_for_algos, i, j, shuffle)
-            except:
-                continue
-            predictions = model_score[0].predict(data_to_predict_for_algos)
-            our_test_score = get_test_score(predictions, test_classes)
-            # print(our_test_score)
-            tuple_to_save = {"estimators": i, "max_depth": j, "model_score": model_score[1],
-                             "future_day": future_day,
-                             "our_test_score": our_test_score}
-            combinations.append(tuple_to_save)
+    for no_of_features in [10, 15, 20, 25, 28]:
+        print(f"{STOCK} {no_of_features}")
+        for i in n_estimators:
+            for j in max_depth:
+                try:
+                    model_score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features)
+                except:
+                    continue
+                predictions = model_score[0].predict(data_to_predict_for_algos)
+                our_test_score = get_test_score(predictions, test_classes)
+                # print(our_test_score)
+                tuple_to_save = {"estimators": i, "max_depth": j, "model_score": model_score[1],
+                                 "future_day": future_day,
+                                 "our_test_score": our_test_score,
+                                 "no_of_features": no_of_features}
+                combinations.append(tuple_to_save)
 
     top = reduce(lambda acc, x: selectTop(acc, x), combinations,
-                 {"our_test_score": -1, 'max_depth': -1, 'model_score': -1, 'future_day': -1, 'estimators': -1})
-    result = get_top_rf_result_csv_format(STOCK, top, shuffle)
+                 {"our_test_score": -1, 'max_depth': -1, 'model_score': -1, 'future_day': -1, 'estimators': -1,
+                  "no_of_features": -1})
+    result = get_top_rf_result_csv_format(STOCK, top)
     print(f"final Result RF: {result}")
     return result
 
@@ -139,8 +146,8 @@ def make_missing_dirs(path):
 
 def add_headers(RESULT_FILE):
     with open(RESULT_FILE, 'w') as f:
-        f.write("Stock,Algorithm,Estimators,Depth,Distance_function,Shuffle,Model_Score,Future_day,"
-                "Our_test_score\n")
+        f.write("Stock,Algorithm,Estimators,Depth,Distance_function,No_of_features,Model_Score,Future_day,"
+                "C,Our_test_score\n")
 
 
 def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day):
@@ -155,7 +162,8 @@ def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, futu
             data_to_predict_for_algos = knn.min_max_transform(data_to_predict_for_algos)
             predictions = clf.predict(data_to_predict_for_algos)
             our_test_score = get_test_score(predictions, test_classes)
-            dict_to_save = {'metric': metric, 'score': score, 'neighbors': n_neighbors, 'our_test_score': our_test_score}
+            dict_to_save = {'metric': metric, 'score': score, 'neighbors': n_neighbors,
+                            'our_test_score': our_test_score}
             combinations.append(dict_to_save)
     top = reduce(lambda acc, x: selectTop(acc, x), combinations, {"our_test_score": -1, 'metric': 'error', 'score': -1})
     print(top)
@@ -163,12 +171,48 @@ def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, futu
                          Our_test_score=top['our_test_score'])
 
 
+def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day, initial_no_of_features,
+            max_features, C):
+    combinations = []
+    for no_of_features in [10, 15, 20, 25, 28]:
+        print(f"{STOCK} {future_day}")
+        for c_val in C:
+            try:
+                clf, score = svm.svm_classifier(data_for_algos, no_of_features, c_val)
+            except:
+                continue
+            # return result_in_csv(STOCK, 'SVM', C=C, Our_test_score=-1)
+            data_to_predict_for_algos = svm.scale_data(data_to_predict_for_algos)
+            predictions = clf.predict(data_to_predict_for_algos)
+            our_test_score = get_test_score(predictions, test_classes)
+            dict_to_save = {'C': c_val, 'score': score, 'future_day': future_day, 'no_of_features': no_of_features,
+                            'our_test_score': our_test_score}
+            combinations.append(dict_to_save)
+    top = reduce(lambda acc, x: selectTop(acc, x), combinations, get_svm_initial_top(future_day))
+    result = get_svm_top_result_csv(STOCK, top)
+    print(result)
+    return result
+
+
+def get_svm_top_result_csv(STOCK, top):
+    return result_in_csv(STOCK, 'SVM', No_of_features=top['no_of_features'], Distance_function="Linear", C=top['C'],
+                  Model_Score=top['score'], Future_day=top['future_day'],
+                  Our_test_score=top['our_test_score'])
+
+
+def get_svm_initial_top(future_day):
+    return {'C': -1, 'score': -1, 'future_day': future_day, 'no_of_features': -1,
+            'our_test_score': -1}
+
+
 def get_test_score(predictions, test_classes):
     our_test_score = sum([1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
     return 0 if our_test_score is None else our_test_score
 
 
-def runExperiment(lock, STOCK_FILE, RESULT_FILE, algos):
+def runExperiment(lock, STOCK_FILE, RESULT_FILE, algos, future_day_start, future_day_stop, estimator_start,
+                  estimator_stop, depth_start, depth_stop, initial_no_of_features, max_features, feature_window_size,
+                  discretize, C):
     STOCK = STOCK_FILE.split(".csv")[0]
     print(STOCK)
 
@@ -181,21 +225,23 @@ def runExperiment(lock, STOCK_FILE, RESULT_FILE, algos):
             continue
 
         if 'KNN' in algos:
-            result = testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
+            result += testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
 
         if 'RF' in algos:
-            # for no_of_features in range(initial_no_of_features, max_features, 1):
-            for shuffle in [True, False]:
-                # print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
-                print(f"Predicting for future days: {future_day} Shuffle: {shuffle}")
-                result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-                                            test_classes, shuffle, actual_data_to_predict)
+            print(f"Predicting {STOCK} for future days: {future_day} using RF")
+            result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+                                        test_classes, actual_data_to_predict, estimator_start, estimator_stop,
+                                        depth_start, depth_stop, initial_no_of_features, max_features)
+
+        if 'SVM' in algos:
+            result += testSVM(STOCK, data_for_algos, data_to_predict_for_algos,
+                              test_classes, future_day, initial_no_of_features, max_features, C)
 
         if 'ZR' in algos:
             result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-                               test_classes)
+                                   test_classes)
 
-        write_result_to_file(lock, RESULT_FILE, result)
+    write_result_to_file(lock, RESULT_FILE, result)
 
 
 def collect_data(no_of_symbols: int, filepath: str):

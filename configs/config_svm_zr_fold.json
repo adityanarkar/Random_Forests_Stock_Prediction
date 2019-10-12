@@ -12,9 +12,9 @@
     "discretize": 1,
     "C": [0.5, 1, 5, 10, 100],
     "algos": [
-      "SVM"
+      "SVM", "ZR"
     ],
-    "RESULT_FILE": "Results/SVM/Everything_Feature/Discretize/Profit_loss/result.csv",
-    "COMPLETED_FILE": "Results/SVM/Everything_Feature/Discretize/Profit_loss/completed.txt"
+    "RESULT_FILE": "Results/Fold/SVM_ZR/Discretize/Profit_loss/result.csv",
+    "COMPLETED_FILE": "Results/Fold/SVM_ZR/Discretize/Profit_loss/completed.txt"
   }
 ]

@@ -1,9 +1,10 @@
 import json
 import os
 from functools import reduce
-
+import definitions
 import numpy as np
 import sklearn.dummy as dummy
+import KNN.knn as knn
 
 import data_prep.data_collection as dc
 from RandomForest import RF_with_predictions as rf
@@ -17,7 +18,7 @@ depth = 60
 initial_no_of_features = 20
 max_features = 21
 feature_window_size = 50
-discretize = False
+discretize = True
 
 
 def selectTop3(top3, x):
@@ -105,10 +106,15 @@ def create_dir_and_store_result(dir_to_create, result_path, result):
 
 
 def get_prepared_data(STOCK_FILE, window_size, feature_window_size, discretize):
-    df, actual_data_to_predict = dp.data_preparation(f"data/{STOCK_FILE}",
+    # window_size = no of days in future you want to predict
+    # feature_window_size = the window size use to calculate the features
+
+    df, actual_data_to_predict = dp.data_preparation(os.path.join(f"{definitions.ROOT_DIR}", f"data/{STOCK_FILE}"),
                                                      window_size=window_size,
                                                      feature_window_size=feature_window_size,
                                                      discretize=discretize).data_frame_with_features()
+    df.drop(columns=['open', 'high', 'low', 'close'], inplace=True)
+    actual_data_to_predict.drop(columns=['open', 'high', 'low', 'close'], inplace=True)
     complete_data = df.to_numpy()
 
     data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-window_size], complete_data[
@@ -136,12 +142,17 @@ def make_missing_dirs(path):
 
 def add_headers(RESULT_FILE):
     with open(RESULT_FILE, 'w') as f:
-        f.write("Stock,Algorithm,Estimators,Depth,No_of_features,Model_Score,Future_day,Our_test_score\n")
+        f.write("Stock,Algorithm,Estimators,Depth,Metric,No_of_features,Model_Score,Future_day,Our_test_score\n")
 
 
-def testSVM(data_for_algos, data_to_predict_for_algos, test_classes, no_of_features):
-    clf, score = svm.svm_classifier(data_for_algos, no_of_features)
-    print(score)
+def testSVM(data_for_algos, data_to_predict_for_algos, test_classes, no_of_features, C, kernel):
+    clf, score = svm.svm_classifier(data_for_algos, no_of_features, C, kernel)
+    print(f"score: {score}, C: {C}, kernel: {kernel}")
+
+
+def testKNN(data_for_algos, no_of_features, n_neighbors, distance_function):
+    clf, score = knn.knn_classifier(data_for_algos, no_of_features, n_neighbors)
+    print(f"K: {n_neighbors}, score: {score}")
 
 
 def runExperiment(lock, STOCK_FILE, RESULT_FILE):
@@ -155,15 +166,17 @@ def runExperiment(lock, STOCK_FILE, RESULT_FILE):
                 STOCK_FILE, future_day, feature_window_size, discretize)
         except:
             continue
-        for no_of_features in range(initial_no_of_features, max_features, 1):
-            print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
-            result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-                                        test_classes, no_of_features, actual_data_to_predict)
-
-        result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-                               test_classes)
-
-        write_result_to_file(lock, RESULT_FILE, result)
+        for k in [3, 5, 7, 9, 11]:
+            testKNN(data_for_algos, 20, k)
+        # for no_of_features in range(initial_no_of_features, max_features, 1):
+        #     print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
+        #     result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+        #                                 test_classes, no_of_features, actual_data_to_predict)
+        #
+        # result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+        #                        test_classes)
+        #
+        # write_result_to_file(lock, RESULT_FILE, result)
 
 
 def collect_data(no_of_symbols: int, filepath: str):

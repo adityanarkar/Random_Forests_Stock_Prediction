@@ -14,7 +14,7 @@
     "algos": [
       "SVM"
     ],
-    "RESULT_FILE": "Results/SVM/Everything_Feature/Discretize/Profit_loss/result.csv",
-    "COMPLETED_FILE": "Results/SVM/Everything_Feature/Discretize/Profit_loss/completed.txt"
+    "RESULT_FILE": "Results/SVM/Feature_Selection-10-Max/Discretize/Profit_loss/result.csv",
+    "COMPLETED_FILE": "Results/SVM/Feature_Selection-10-Max/Discretize/Profit_loss/completed.txt"
   }
 ]

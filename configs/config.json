@@ -1,0 +1,1 @@
+{"future_day_start": 10, "future_day_stop": 110, "estimator_start": 10, "estimator_stop": 60, "depth_start": 10, "depth_stop": 60, "initial_no_of_features": 19, "max_features": 20, "feature_window_size": 50, "discretize": 1}

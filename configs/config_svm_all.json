@@ -1,0 +1,20 @@
+[
+  {
+    "future_day_start": 10,
+    "future_day_stop": 110,
+    "estimator_start": 0,
+    "estimator_stop": 0,
+    "depth_start": 0,
+    "depth_stop": 0,
+    "initial_no_of_features": 11,
+    "max_features": 12,
+    "feature_window_size": 50,
+    "discretize": 1,
+    "C": [0.5, 1, 5, 10, 100],
+    "algos": [
+      "SVM"
+    ],
+    "RESULT_FILE": "Results/SVM/Everything/Discretize/Profit_loss/result.csv",
+    "COMPLETED_FILE": "Results/SVM/Everything/Discretize/Profit_loss/completed.txt"
+  }
+]
