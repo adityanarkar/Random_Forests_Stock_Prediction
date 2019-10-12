@@ -2,7 +2,7 @@ import multiprocessing
 import os, random, json, main_updated, main_fold
 from multiprocessing import Process, Lock
 
-file = open('configs/config_rf_fold.json')
+file = open('configs/config_svm_zr_fold.json')
 configs = json.load(file)
 
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                                 discretize, C))
                 p.start()
                 processes.append({"process": p, "stock": filename})
-                if len(processes) % 8 == 0:
+                if len(processes) % max_cpus == 0:
                     processes[0]["process"].join()
                     open(COMPLETED_FILE, 'a').write(f"{processes[0]['stock']}\n")
                     processes.remove(processes[0])

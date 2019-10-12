@@ -8,18 +8,8 @@ import KNN.knn as knn
 
 import data_prep.data_collection as dc
 from RandomForest import rf_fold as rf
-from SVM import svm
+from SVM import svm_fold
 from data_prep import data_preparation as dp
-
-
-# future_day_start = 10
-# future_day_stop = 110
-# estimator_end = 60
-# depth = 60
-# initial_no_of_features = 22
-# max_features = 23
-# feature_window_size = 50
-# discretize = True
 
 
 def selectTop3(top3, x):
@@ -164,7 +154,7 @@ def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,
         print(f"{STOCK} {future_day}")
         for c_val in C:
             try:
-                clf, score = svm.svm_classifier(data_for_algos, no_of_features, c_val, future_day)
+                clf, score = svm_fold.svm_classifier(data_for_algos, no_of_features, c_val, future_day)
                 if score > top['score']:
                     top = get_top_svm(c_val, score, future_day, no_of_features)
             except:
