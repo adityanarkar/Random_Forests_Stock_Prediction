@@ -3,7 +3,7 @@ import os
 from functools import reduce
 import definitions
 import numpy as np
-import sklearn.dummy as dummy
+from ZeroR import zeror
 import KNN.knn as knn
 
 import data_prep.data_collection as dc
@@ -90,19 +90,12 @@ def get_top_rf_result_csv_format(STOCK, top):
     return result
 
 
-def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
+def testZeroHour(STOCK, future_day, data_for_algos):
     try:
-        model = dummy.DummyClassifier(strategy="most_frequent")
-        X = np.asarray(list(map(lambda row: row[:-1], data_for_algos)))
-        y = np.asarray(list(map(lambda row: row[-1], data_for_algos)))
-        model.fit(X, y)
-        predictions = model.predict(data_to_predict_for_algos)
-        our_test_score = get_test_score(predictions, test_classes)
-        result = result_in_csv(STOCK, 'ZR', Future_day=future_day, Our_test_score=our_test_score)
+        model, score = zeror.zr(data_for_algos, future_day)
+        return result_in_csv(STOCK, 'ZR', Future_day=future_day, Model_Score=score)
     except:
-        result = result_in_csv(STOCK, 'ZR', Future_day=future_day, Our_test_score=-1)
-    print(result)
-    return result
+        return result_in_csv(STOCK, 'ZR', Future_day=future_day, Model_Score=-1)
 
 
 def create_dir_and_store_result(dir_to_create, result_path, result):
@@ -164,38 +157,34 @@ def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, futu
                          Our_test_score=top['our_test_score'])
 
 
-def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day, initial_no_of_features,
+def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,
             max_features, C):
-    combinations = []
+    top = get_svm_initial_top(future_day)
     for no_of_features in [10, 15, 20, 25, 28]:
         print(f"{STOCK} {future_day}")
         for c_val in C:
             try:
-                clf, score = svm.svm_classifier(data_for_algos, no_of_features, c_val)
+                clf, score = svm.svm_classifier(data_for_algos, no_of_features, c_val, future_day)
+                if score > top['score']:
+                    top = get_top_svm(c_val, score, future_day, no_of_features)
             except:
                 continue
-            # return result_in_csv(STOCK, 'SVM', C=C, Our_test_score=-1)
-            data_to_predict_for_algos = svm.scale_data(data_to_predict_for_algos)
-            predictions = clf.predict(data_to_predict_for_algos)
-            our_test_score = get_test_score(predictions, test_classes)
-            dict_to_save = {'C': c_val, 'score': score, 'future_day': future_day, 'no_of_features': no_of_features,
-                            'our_test_score': our_test_score}
-            combinations.append(dict_to_save)
-    top = reduce(lambda acc, x: selectTop(acc, x), combinations, get_svm_initial_top(future_day))
     result = get_svm_top_result_csv(STOCK, top)
-    print(result)
+    print(f"{result}")
     return result
+
+
+def get_top_svm(C, score, future_day, no_of_features):
+    return {'C': C, 'score': score, 'future_day': future_day, 'no_of_features': no_of_features}
 
 
 def get_svm_top_result_csv(STOCK, top):
     return result_in_csv(STOCK, 'SVM', No_of_features=top['no_of_features'], Distance_function="Linear", C=top['C'],
-                         Model_Score=top['score'], Future_day=top['future_day'],
-                         Our_test_score=top['our_test_score'])
+                         Model_Score=top['score'], Future_day=top['future_day'])
 
 
 def get_svm_initial_top(future_day):
-    return {'C': -1, 'score': -1, 'future_day': future_day, 'no_of_features': -1,
-            'our_test_score': -1}
+    return {'C': -1, 'score': -1, 'future_day': future_day, 'no_of_features': -1}
 
 
 def get_test_score(predictions, test_classes):
