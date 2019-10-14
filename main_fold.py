@@ -139,9 +139,13 @@ def testKNN(STOCK, data_for_algos, future_day):
                     top = get_knn_top(distance_function, score, last_test_score)
             except:
                 continue
-    return result_in_csv(STOCK, 'KNN', Distance_function=top["distance_function"], Model_Score=top['score'],
-                         Future_day=future_day,
-                         Our_test_score=top['our_test_score'])
+    return get_csv_result_knn(STOCK, top, future_day)
+
+
+def get_csv_result_knn(STOCK, top, future_day):
+    result_in_csv(STOCK, 'KNN', Distance_function=top["distance_function"], Model_Score=top['score'],
+                  Future_day=future_day,
+                  Our_test_score=top['our_test_score'])
 
 
 def is_new_model_better(top, score, last_test_score):
