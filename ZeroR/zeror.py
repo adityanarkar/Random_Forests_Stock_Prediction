@@ -16,4 +16,4 @@ def zr(data, future_day):
         model.fit(X_train, y_train)
         predict_score = score.get_score(model, X_test, y_test)
         scores.append(predict_score)
-    return model, np.mean(scores)
+    return model, np.mean(scores), predict_score

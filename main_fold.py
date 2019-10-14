@@ -4,7 +4,7 @@ from functools import reduce
 import definitions
 import numpy as np
 from ZeroR import zeror
-import KNN.knn as knn
+import KNN.knn_fold as knn
 
 import data_prep.data_collection as dc
 from RandomForest import rf_fold as rf
@@ -49,12 +49,13 @@ def testRandomForests(STOCK, future_day, data_for_algos, estimator_start, estima
         for i in n_estimators:
             for j in max_depth:
                 try:
-                    selector, score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features, future_day=future_day)
+                    selector, score, last_test_score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features,
+                                                                                   future_day=future_day)
+                    if is_new_model_better(top, score, last_test_score):
+                        top = get_top_rf(estimators=i, max_depth=j, model_score=score, future_day=future_day,
+                                         no_of_features=no_of_features)
                 except:
                     continue
-                if score > top['model_score']:
-                    top = get_top_rf(estimators=i, max_depth=j, model_score=score, future_day=future_day,
-                                     no_of_features=no_of_features)
     result = get_top_rf_result_csv_format(STOCK, top)
     print(f"final Result RF: {result}")
     return result
@@ -75,17 +76,18 @@ def get_top_rf_result_csv_format(STOCK, top):
     top_model_score = top['model_score']
     top_future_day = top['future_day']
     top_no_of_features = top['no_of_features']
+    top_our_test_score = top['our_test_score']
     result = result_in_csv(STOCK, 'RF', top_estimator, top_depth, No_of_features=top_no_of_features,
-                           Model_Score=top_model_score, Future_day=top_future_day)
+                           Model_Score=top_model_score, Future_day=top_future_day, Our_test_score=top_our_test_score)
     return result
 
 
 def testZeroHour(STOCK, future_day, data_for_algos):
     try:
-        model, score = zeror.zr(data_for_algos, future_day)
-        return result_in_csv(STOCK, 'ZR', Future_day=future_day, Model_Score=score)
+        model, score, last_score = zeror.zr(data_for_algos, future_day)
+        return result_in_csv(STOCK, 'ZR', Future_day=future_day, Model_Score=score, Our_test_score=last_score)
     except:
-        return result_in_csv(STOCK, 'ZR', Future_day=future_day, Model_Score=-1)
+        return result_in_csv(STOCK, 'ZR', Future_day=future_day, Model_Score=-1, Our_test_score=-1)
 
 
 def create_dir_and_store_result(dir_to_create, result_path, result):
@@ -126,36 +128,40 @@ def add_headers(RESULT_FILE):
                 "C,Our_test_score\n")
 
 
-def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day):
-    combinations = []
+def testKNN(STOCK, data_for_algos, future_day):
     algos = ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']
+    top = get_knn_top("-1", -1, -1)
     for n_neighbors in [3, 5, 7, 9, 11]:
-        for metric in algos:
+        for distance_function in algos:
             try:
-                clf, score = knn.knn_classifier(data_for_algos, metric, n_neighbors)
+                clf, score, last_test_score = knn.knn_classifier(data_for_algos, distance_function, n_neighbors)
+                if is_new_model_better(top, score, last_test_score):
+                    top = get_knn_top(distance_function, score, last_test_score)
             except:
                 continue
-            data_to_predict_for_algos = knn.min_max_transform(data_to_predict_for_algos)
-            predictions = clf.predict(data_to_predict_for_algos)
-            our_test_score = get_test_score(predictions, test_classes)
-            dict_to_save = {'metric': metric, 'score': score, 'neighbors': n_neighbors,
-                            'our_test_score': our_test_score}
-            combinations.append(dict_to_save)
-    top = reduce(lambda acc, x: selectTop(acc, x), combinations, {"our_test_score": -1, 'metric': 'error', 'score': -1})
-    print(top)
-    return result_in_csv(STOCK, 'KNN', Distance_function=top["metric"], Model_Score=top['score'], Future_day=future_day,
+    return result_in_csv(STOCK, 'KNN', Distance_function=top["distance_function"], Model_Score=top['score'],
+                         Future_day=future_day,
                          Our_test_score=top['our_test_score'])
+
+
+def is_new_model_better(top, score, last_test_score):
+    return last_test_score > top['our_test_score'] or (
+                last_test_score == top['our_test_score'] and score > top['score'])
+
+
+def get_knn_top(distance_function, score, our_test_score):
+    return {"distance_function": distance_function, 'score': score, 'our_test_score': our_test_score}
 
 
 def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,
             max_features, C):
-    top = get_svm_initial_top(future_day)
+    top = get_top_svm(-1, -1, future_day, -1)
     for no_of_features in [10, 15, 20, 25, 28]:
         print(f"{STOCK} {future_day}")
         for c_val in C:
             try:
-                clf, score = svm_fold.svm_classifier(data_for_algos, no_of_features, c_val, future_day)
-                if score > top['score']:
+                clf, score, last_test_score = svm_fold.svm_classifier(data_for_algos, no_of_features, c_val, future_day)
+                if is_new_model_better(top, score, last_test_score):
                     top = get_top_svm(c_val, score, future_day, no_of_features)
             except:
                 continue
@@ -170,11 +176,7 @@ def get_top_svm(C, score, future_day, no_of_features):
 
 def get_svm_top_result_csv(STOCK, top):
     return result_in_csv(STOCK, 'SVM', No_of_features=top['no_of_features'], Distance_function="Linear", C=top['C'],
-                         Model_Score=top['score'], Future_day=top['future_day'])
-
-
-def get_svm_initial_top(future_day):
-    return {'C': -1, 'score': -1, 'future_day': future_day, 'no_of_features': -1}
+                         Model_Score=top['score'], Future_day=top['future_day'], Our_test_score=top['our_test_score'])
 
 
 def get_test_score(predictions, test_classes):

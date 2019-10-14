@@ -6,7 +6,7 @@ from sklearn.feature_selection import RFE
 
 
 def random_forest_classifier(data, n_estimators, max_depth, no_of_features, future_day):
-    sum_score = 0
+    scores = []
     X = np.asarray(list(map(lambda row: row[:-1], data)))
     y = np.asarray(list(map(lambda row: row[-1], data)))
     # training and testing
@@ -14,14 +14,12 @@ def random_forest_classifier(data, n_estimators, max_depth, no_of_features, futu
     selector = 0
     for train_index, test_index in zip(train_indices, test_indices):
         X_train, y_train, X_test, y_test = get_train_test_set(X, y, train_index, test_index)
-
         clf = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth)
         selector = RFE(clf, no_of_features, step=1)
         selector = selector.fit(X_train, y_train)
         predict_score = score.get_score(selector, X_test, y_test)
-        print(f"n_estimators:{n_estimators}, max_depth:{max_depth}, no_of_features:{no_of_features}, future_day:{future_day}, score: {predict_score}")
-        sum_score += predict_score
-    return selector, (sum_score / len(train_indices))
+        scores.append(predict_score)
+    return selector, np.mean(scores), predict_score
 
 
 def get_train_test_set(X, y, train_index, test_index):
