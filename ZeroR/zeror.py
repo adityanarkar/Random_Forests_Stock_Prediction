@@ -11,6 +11,7 @@ def zr(data, future_day):
 
     train_indices, test_indices = k_splits.get_max_k_splits(X, k=10, size_of_each_split=future_day)
     model = dummy.DummyClassifier(strategy="most_frequent")
+    predict_score = -1
     for train_index, test_index in zip(train_indices, test_indices):
         X_train, y_train, X_test, y_test = k_splits.get_train_test_set(X, y, train_index, test_index)
         model.fit(X_train, y_train)

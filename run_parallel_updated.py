@@ -2,7 +2,7 @@ import multiprocessing
 import os, random, json, main_updated, main_fold
 from multiprocessing import Process, Lock
 
-file = open('configs/config_svm_zr_fold.json')
+file = open('configs/config_all_disc.json')
 configs = json.load(file)
 
 
@@ -58,6 +58,7 @@ if __name__ == '__main__':
                                 feature_window_size,
                                 discretize, C))
                 p.start()
+                p.join()
                 processes.append({"process": p, "stock": filename})
                 if len(processes) % max_cpus == 0:
                     processes[0]["process"].join()
