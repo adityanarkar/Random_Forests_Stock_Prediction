@@ -13,7 +13,6 @@ def scale_data(X):
     return scaler.transform(X)
 
 
-
 def svm_classifier(data, features_to_select, C, future_day):
     scores = []
     X = np.asarray(list(map(lambda row: row[:-1], data)))

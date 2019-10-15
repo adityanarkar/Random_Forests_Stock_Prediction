@@ -53,7 +53,7 @@ def testRandomForests(STOCK, future_day, data_for_algos, estimator_start, estima
                                                                                future_day=future_day)
                 if is_new_model_better(top, score, last_test_score):
                     top = get_top_rf(estimators=i, max_depth=j, model_score=score, future_day=future_day,
-                                     no_of_features=-1)
+                                     no_of_features=-1, last_test_score=last_test_score)
             except:
                 continue
     result = get_top_rf_result_csv_format(STOCK, top)
@@ -62,12 +62,12 @@ def testRandomForests(STOCK, future_day, data_for_algos, estimator_start, estima
 
 
 def get_initial_top_rf():
-    return {"estimators": -1, 'max_depth': -1, 'model_score': -1, 'future_day': -1, 'no_of_features': -1}
+    return {"estimators": -1, 'max_depth': -1, 'model_score': -1, 'future_day': -1, 'no_of_features': -1, 'our_test_score':-1}
 
 
-def get_top_rf(estimators, max_depth, model_score, future_day, no_of_features):
+def get_top_rf(estimators, max_depth, model_score, future_day, no_of_features, last_test_score):
     return {'estimators': estimators, 'max_depth': max_depth, 'model_score': model_score, 'future_day': future_day,
-            'no_of_features': no_of_features}
+            'no_of_features': no_of_features, 'our_test_score': last_test_score}
 
 
 def get_top_rf_result_csv_format(STOCK, top):
@@ -102,7 +102,7 @@ def get_prepared_data(STOCK_FILE, window_size, feature_window_size, discretize):
                                                      window_size=window_size,
                                                      feature_window_size=feature_window_size,
                                                      discretize=discretize).data_frame_with_features()
-    df.drop(columns=['open', 'high', 'low', 'close'], inplace=True)
+    # df.drop(columns=['open', 'high', 'low', 'close'], inplace=True)
     data_for_algos = df.to_numpy()
     return data_for_algos, actual_data_to_predict
 
@@ -134,7 +134,7 @@ def testKNN(STOCK, data_for_algos, future_day):
     for n_neighbors in [3, 5, 7, 9, 11]:
         for distance_function in algos:
             try:
-                clf, score, last_test_score = knn.knn_classifier(data_for_algos, distance_function, n_neighbors)
+                clf, score, last_test_score = knn.knn_classifier(data_for_algos, distance_function, n_neighbors, future_day)
                 if is_new_model_better(top, score, last_test_score):
                     top = get_knn_top(distance_function, score, last_test_score)
             except:
@@ -143,7 +143,7 @@ def testKNN(STOCK, data_for_algos, future_day):
 
 
 def get_csv_result_knn(STOCK, top, future_day):
-    result_in_csv(STOCK, 'KNN', Distance_function=top["distance_function"], Model_Score=top['score'],
+    return result_in_csv(STOCK, 'KNN', Distance_function=top["distance_function"], Model_Score=top['score'],
                   Future_day=future_day,
                   Our_test_score=top['our_test_score'])
 
@@ -159,14 +159,14 @@ def get_knn_top(distance_function, score, our_test_score):
 
 def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,
             max_features, C):
-    top = get_top_svm(-1, -1, future_day, -1)
+    top = get_top_svm(-1, -1, future_day, -1, -1)
     # for no_of_features in [10, 15, 20, 25, 28]:
     print(f"{STOCK} {future_day}")
     for c_val in C:
         try:
             clf, score, last_test_score = svm_fold.svm_classifier(data_for_algos, -1, c_val, future_day)
             if is_new_model_better(top, score, last_test_score):
-                top = get_top_svm(c_val, score, future_day, -1)
+                top = get_top_svm(c_val, score, future_day, -1, last_test_score)
         except:
             continue
     result = get_svm_top_result_csv(STOCK, top)
@@ -174,8 +174,8 @@ def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,
     return result
 
 
-def get_top_svm(C, score, future_day, no_of_features):
-    return {'C': C, 'score': score, 'future_day': future_day, 'no_of_features': no_of_features}
+def get_top_svm(C, score, future_day, no_of_features, our_test_score):
+    return {'C': C, 'score': score, 'future_day': future_day, 'no_of_features': no_of_features, 'our_test_score': our_test_score}
 
 
 def get_svm_top_result_csv(STOCK, top):
