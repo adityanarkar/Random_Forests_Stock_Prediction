@@ -58,7 +58,7 @@ class data_preparation(object):
         features.MACD(df, self.discretize)
         features.RSI(df, self.discretize)
         features.williamsR(df, 9, self.discretize)
-        # features.ADIndicator(df)
+        features.ADIndicator(df, self.discretize)
         # features.diff_n_Months(df, 90)
         # features.diff_current_lowest_low(df, 90)
         # features.diff_current_highest_high(df, 90)
@@ -69,8 +69,9 @@ class data_preparation(object):
         # features.fourier_transform_min(df, 90)
         # features.fourier_transform_max(df, 90)
         # features.fourier_transform_mean(df, 90)
+        features.CCI(df, 20, self.discretize)
         df.dropna(inplace=True)
-        # features.CCI(df, 20)
+
 
         df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)
         data_to_predict = self.get_fresh_data_for_prediction(df)
