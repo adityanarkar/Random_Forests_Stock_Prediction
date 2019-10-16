@@ -2,7 +2,7 @@ import multiprocessing
 import os, random, json, main_updated, main_fold
 from multiprocessing import Process, Lock
 
-file = open('configs/config_all_disc.json')
+file = open('configs/config_all_features_all_algos.json')
 configs = json.load(file)
 
 
