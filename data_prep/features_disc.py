@@ -165,23 +165,35 @@ def williamsR(df: pd.DataFrame, lookback_period: int, discretize: bool):
         # df.dropna(inplace=True)
 
 
-def ADIndicator(df: pd.DataFrame):
-    df["AD"] = ((df["adjusted_close"] - df["low"]) - (df["high"] - df["adjusted_close"]) / (df["high"] - df["low"])) * \
-               df["volume"]
+def ADIndicator(df: pd.DataFrame, discretize: bool):
+    df["AD"] = ((df["close"] - df["low"]) - (df["high"] - df["close"]) / (df["high"] - df["low"]))
     df["AD"] = df["AD"].cumsum()
-    df["AD"] = df["AD"].rolling(window=2).apply(lambda x: discretizeOscillator(x))
+    if discretize:
+        df["AD"] = df["AD"].rolling(window=2).apply(lambda x: 1 if x[0] < x[1] else -1)
+
+def CCI(df: pd.DataFrame, window, discretize: bool):
+    df["TP"] = (df['high'] + df['low'] + df['close'])/3
+    df["TP"] = df["TP"].rolling(window=window).sum()
     df.dropna(inplace=True)
 
-
-def CCI(df: pd.DataFrame, window):
-    df["TP"] = (df["high"] + df["low"] + df["adjusted_close"]) / 3
-    df[f"{window}-day-SMA-TP"] = df["TP"].rolling(window=window).mean()
+    df["TPMA"] = df["TP"].rolling(window=window).mean()
+    df["MeanDeviation"] = df["TP"] - df["TPMA"]
+    df["MeanDeviation"] = df["MeanDeviation"].rolling(window=window).mean()
     df.dropna(inplace=True)
 
-    df[f"{window}-day-mean-deviation"] = abs(df["TP"] - df[f"{window}-day-SMA-TP"])
-    df["CCI"] = (df["TP"] - df[f"{window}-day-SMA-TP"]) / (0.15 * df[f"{window}-day-mean-deviation"])
-    df.drop(inplace=True, columns=[f"{window}-day-SMA-TP", f"{window}-day-mean-deviation", "TP"])
+    df["CCI"] = (df["TP"] - df["TPMA"]) / (0.15 * df["MeanDeviation"])
+    if discretize:
+        df["CCI"] = df["CCI"].rolling(window=2).apply(lambda x: discretize_CCI(x))
 
+def discretize_CCI(x):
+    if x[1] >= 200:
+        return -1
+    elif x[1] <= -200:
+        return 1
+    elif x[0] < x[1]:
+        return 1
+    else:
+        return -1
 
 def diff_n_Months(df: pd.DataFrame, window_size):
     df["diff_3_months"] = df["adjusted_close"].rolling(window=window_size).apply(lambda x: (x[-1] - x[0]) / x[-1])
