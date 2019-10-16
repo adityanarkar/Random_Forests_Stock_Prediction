@@ -78,6 +78,6 @@ class data_preparation(object):
         # df = df.apply(lambda x: self.create_label(x), axis=1)
         self.create_label_profit_loss(df, self.window)
         df.dropna(inplace=True)
-        df.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient', 'open', 'high', 'low', 'close', 'adjusted_close', 'volume', '9-day-EMA', '12-day-EMA', '26-day-EMA', 'TPMA', 'TP', 'MeanDeviation'], inplace=True)
-        data_to_predict.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient', 'open', 'high', 'low', 'close', 'adjusted_close', 'volume', '9-day-EMA', '12-day-EMA', '26-day-EMA', 'TPMA', 'TP', 'MeanDeviation'], inplace=True)
+        df.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient', 'open', 'high', 'low', 'close', '9-day-EMA', '12-day-EMA', '26-day-EMA', 'TPMA', 'TP', 'MeanDeviation'], inplace=True)
+        data_to_predict.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient', 'open', 'high', 'low', 'close', '9-day-EMA', '12-day-EMA', '26-day-EMA', 'TPMA', 'TP', 'MeanDeviation'], inplace=True)
         return df, data_to_predict

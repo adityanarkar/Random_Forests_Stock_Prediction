@@ -58,6 +58,7 @@ if __name__ == '__main__':
                                 feature_window_size,
                                 discretize, C))
                 p.start()
+                p.join()
                 processes.append({"process": p, "stock": filename})
                 if len(processes) % max_cpus == 0:
                     processes[0]["process"].join()

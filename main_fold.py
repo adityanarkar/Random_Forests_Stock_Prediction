@@ -44,8 +44,8 @@ def testRandomForests(STOCK, future_day, data_for_algos, estimator_start, estima
     n_estimators = range(estimator_start, estimator_stop, 10)
     max_depth = range(depth_start, depth_stop, 10)
     top = get_initial_top_rf()
-    for no_of_features in [10, 15, 20, 25, 30]:
-    print(f"{STOCK} {future_day}")
+    for no_of_features in [10, 15, 20, 22, "all"]:
+        print(f"{STOCK} {future_day}")
     for i in n_estimators:
         for j in max_depth:
             try:
@@ -131,7 +131,7 @@ def add_headers(RESULT_FILE):
 def testKNN(STOCK, data_for_algos, future_day):
     algos = ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']
     top = get_knn_top("-1", -1, -1, -1)
-    for no_of_features in [10, 15, 20, 25, 30]:
+    for no_of_features in [10, 15, 20, 22, 24]:
         for n_neighbors in [3, 5, 7, 9, 11]:
             for distance_function in algos:
                 try:
@@ -162,8 +162,8 @@ def get_knn_top(distance_function, score, our_test_score, no_of_features):
 def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,
             max_features, C):
     top = get_top_svm(-1, -1, future_day, -1, -1)
-    for no_of_features in [10, 15, 20, 25, 28]:
-    print(f"{STOCK} {future_day}")
+    for no_of_features in [10, 15, 20, 22, 24]:
+        print(f"{STOCK} {future_day}")
     for c_val in C:
         try:
             clf, score, last_test_score = svm_fold.svm_classifier(data_for_algos, no_of_features, c_val, future_day)
@@ -201,8 +201,10 @@ def runExperiment(lock, STOCK_FILE, RESULT_FILE, algos, future_day_start, future
         try:
             data_for_algos, actual_data_to_predict = get_prepared_data(
                 STOCK_FILE, future_day, feature_window_size, discretize)
+            # print(data_for_algos.shape)
         except:
             continue
+
 
         if 'KNN' in algos:
             result += testKNN(STOCK, data_for_algos, future_day)
