@@ -3,7 +3,8 @@ from sklearn.preprocessing import MinMaxScaler
 from Prediction import score
 from sklearn.svm import LinearSVC
 from sklearn.feature_selection import RFE
-
+from sklearn.utils.testing import ignore_warnings
+from sklearn.exceptions import ConvergenceWarning
 from data_prep import k_splits
 
 
@@ -13,6 +14,7 @@ def scale_data(X):
     return scaler.transform(X)
 
 
+@ignore_warnings(category=ConvergenceWarning)
 def svm_classifier(data, features_to_select, C, future_day):
     scores = []
     X = np.asarray(list(map(lambda row: row[:-1], data)))
