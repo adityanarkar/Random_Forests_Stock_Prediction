@@ -174,7 +174,6 @@ def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,
     print(f"SVM started for {STOCK} {future_day}")
     top = get_top_svm(-1, -1, future_day, -1, -1)
     for no_of_features in [10, 15, 20, 22, data_for_algos.shape[1]]:
-        print(f"{STOCK} {future_day}")
         for c_val in C:
             try:
                 clf, score, last_test_score = svm_fold.svm_classifier(data_for_algos, no_of_features, c_val, future_day)

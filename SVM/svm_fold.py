@@ -32,5 +32,4 @@ def svm_classifier(data, features_to_select, C, future_day):
         clf.fit(X_train, y_train)
         predict_score = score.get_score(clf, X_test, y_test)
         scores.append(predict_score)
-        print(predict_score)
     return clf, np.mean(scores), predict_score
