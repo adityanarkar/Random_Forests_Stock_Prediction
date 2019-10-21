@@ -28,8 +28,10 @@ def svm_classifier(data, features_to_select, C, future_day):
     for train_index, test_index in zip(train_indices, test_indices):
         X_train, y_train, X_test, y_test = k_splits.get_train_test_set(X, y, train_index, test_index)
         clf = LinearSVC(random_state=0, tol=1e-5, C=C, max_iter=10000)
-        # clf = RFE(clf, features_to_select, step=1)
+        clf = RFE(clf, features_to_select, step=1)
         clf.fit(X_train, y_train)
         predict_score = score.get_score(clf, X_test, y_test)
         scores.append(predict_score)
-    return clf, np.mean(scores), predict_score
+    mean_score = np.mean(scores[:-1])
+    mean_score = -1 if np.isnan(mean_score) else mean_score
+    return clf, mean_score, predict_score

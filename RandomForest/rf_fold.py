@@ -16,12 +16,13 @@ def random_forest_classifier(data, n_estimators, max_depth, no_of_features, futu
     for train_index, test_index in zip(train_indices, test_indices):
         X_train, y_train, X_test, y_test = get_train_test_set(X, y, train_index, test_index)
         selector = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth)
-        # selector = RFE(selector, no_of_features, step=1)
-        # selector = selector.fit(X_train, y_train)
-        selector.fit(X_train, y_train)
+        selector = RFE(selector, no_of_features, step=1)
+        selector = selector.fit(X_train, y_train)
         predict_score = score.get_score(selector, X_test, y_test)
         scores.append(predict_score)
-    return selector, np.mean(scores), predict_score
+    mean_score = np.mean(scores[:-1])
+    mean_score = -1 if np.isnan(mean_score) else mean_score
+    return selector, mean_score, predict_score
 
 
 def get_train_test_set(X, y, train_index, test_index):
