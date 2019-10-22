@@ -1,0 +1,53 @@
+CWEN, HUN, INXN, ABR, KMT(S), CUZ
+Stock:CWEN.csv,Estimators:10,Depth:10,no_of_features:10,future_day:20,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
+Stock:HUN.csv,Estimators:40,Depth:20,no_of_features:23,future_day:10,prediction:[-1. -1.  0.  0.  0.  0.  0.  0.  0.  0.]
+Stock:APH.csv,Estimators:10,Depth:20,no_of_features:16,future_day:10,prediction:[-1. -1. -1.  0.  0.  0.  0.  0.  0.  0.]
+Stock:KMT.csv,Estimators:10,Depth:10,no_of_features:13,future_day:10,prediction:[-1. -1. -1. -1. -1. -1. -1. -1.  0.  1.]
+Stock:INXN.csv,Estimators:10,Depth:40,no_of_features:10,future_day:30,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.]
+Stock:HUN.csv,Estimators:10,Depth:50,no_of_features:14,future_day:20,prediction:[ 1.  1. -1. -1. -1.  1. -1.  1.  1.  1.  1.  1.  1.  1. -1. -1.  1.  1.
+  1.  1.]
+Stock:CWEN.csv,Estimators:10,Depth:50,no_of_features:14,future_day:60,prediction:[ 1.  1.  1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+ -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1.  0.  0.  1.  1. -1.  1.
+  1.  1.  1.  1.  1.  1.]
+Stock:INXN.csv,Estimators:30,Depth:20,no_of_features:10,future_day:50,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.]
+Stock:ABR.csv,Estimators:10,Depth:10,no_of_features:10,future_day:40,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1. -1.  1.  1. -1. -1.  1.
+  1. -1.  1.  1.]
+Stock:ABR.csv,Estimators:10,Depth:10,no_of_features:11,future_day:50,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.]
+Stock:APH.csv,Estimators:10,Depth:10,no_of_features:10,future_day:40,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1.  1.  1.
+ -1. -1.  1.  1. -1. -1.  1. -1.  1.  1. -1.  1. -1. -1.  1.  1. -1. -1.
+  1.  1.  1.  1.]
+Stock:BHP.csv,Estimators:50,Depth:10,no_of_features:10,future_day:40,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.]
+Stock:APH.csv,Estimators:10,Depth:10,no_of_features:16,future_day:50,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1. -1.  1. -1.
+  1. -1. -1. -1. -1. -1.  1.  1.  1.  1.  1.  1.  1.  1.]
+Stock:CUZ.csv,Estimators:10,Depth:40,no_of_features:12,future_day:50,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  0.  1.  1.  1. -1.  1.  1.  1.  1.  1.  0.  1.  1.]
+Stock:ABR.csv,Estimators:40,Depth:50,no_of_features:11,future_day:90,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
+Stock:CUZ.csv,Estimators:30,Depth:40,no_of_features:24,future_day:70,prediction:[-1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.]
+Stock:APH.csv,Estimators:20,Depth:20,no_of_features:22,future_day:90,prediction:[-1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.  1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.]
+Stock:CUZ.csv,Estimators:10,Depth:10,no_of_features:13,future_day:100,prediction:[-1. -1. -1. -1. -1. -1. -1. -1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.  1. -1.  1.  1. -1. -1.  1.  1.
+ -1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1.  1.  1.  1. -1.  1.  1.  1.
+  1. -1. -1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1. -1.  1.  1.  1. -1.
+ -1. -1. -1. -1. -1.  1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.  1.
+ -1.  1.  1.  1. -1. -1.  1. -1.  1.  1.]

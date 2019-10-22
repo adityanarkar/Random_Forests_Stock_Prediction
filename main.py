@@ -1,12 +1,9 @@
 import json
 import os
-from functools import reduce
-import definitions
-import numpy as np
-import sklearn.dummy as dummy
+import ZeroR.zr as zr
 import KNN.knn as knn
-
 import data_prep.data_collection as dc
+import definitions
 from RandomForest import RF_with_predictions as rf
 from SVM import svm
 from data_prep import data_preparation as dp
@@ -15,7 +12,7 @@ future_day_start = 10
 future_day_stop = 110
 estimator_end = 60
 depth = 60
-initial_no_of_features = 20
+initial_no_of_features = 10
 max_features = 21
 feature_window_size = 50
 discretize = True
@@ -41,59 +38,71 @@ def getInitial():
     return initial
 
 
-def get_top_rf_result_csv_format(STOCK, top, no_of_features):
+def get_top_rf_result_csv_format(STOCK, top):
     top_estimator = top["estimators"]
     top_depth = top['max_depth']
     top_model_score = top['model_score']
     top_future_day = top['future_day']
     top_our_test_score = top['our_test_score']
-    result = f"{STOCK},RF,{top_estimator},{top_depth},{no_of_features},{top_model_score},{top_future_day},{top_our_test_score}\n"
+    top_no_of_features = top['no_of_features']
+    result = result_in_csv(STOCK, 'RF', top_estimator, top_depth, Model_Score=top_model_score,
+                           Future_day=top_future_day, Our_test_score=top_our_test_score,
+                           No_of_features=top_no_of_features)
     return result
 
 
-def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes, no_of_features,
-                      actual_data_to_predict):
-    try:
-        n_estimators = range(10, estimator_end, 10)
-        max_depth = range(10, depth, 10)
-        combinations = []
+def result_in_csv(STOCK, Algo, Estimator=-1, Depth=-1, Metric='0', No_of_features=0, Model_Score=0.0,
+                  Future_day=0, C=-1, degree=-1, No_of_neighbors=-1,
+                  Our_test_score=-1.0):
+    return f"{STOCK},{Algo},{Estimator},{Depth},{Metric},{No_of_features},{Model_Score},{Future_day},{C},{degree},{No_of_neighbors},{Our_test_score}\n "
 
+
+def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes,
+                      actual_data_to_predict):
+    n_estimators = range(10, estimator_end, 10)
+    max_depth = range(10, depth, 10)
+    top = get_top_rf()
+    for no_of_features in range(initial_no_of_features, data_for_algos.shape[1] + 1, 1):
+        print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
         for i in n_estimators:
             for j in max_depth:
-                model_score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features)
-                predictions = model_score[0].predict(data_to_predict_for_algos)
-                our_test_score = sum([1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
-                # print(our_test_score)
-                our_test_score = 0 if our_test_score is None else our_test_score
-                tuple_to_save = {"estimators": i, "max_depth": j, "model_score": model_score[1],
-                                 "future_day": future_day,
-                                 "our_test_score": our_test_score}
-                combinations.append(tuple_to_save)
+                try:
+                    model, score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features)
+                    predictions = model.predict(data_to_predict_for_algos)
+                    our_test_score = sum(
+                        [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
+                    our_test_score = 0 if our_test_score is None else our_test_score
+                    if our_test_score > top['our_test_score']:
+                        top = get_top_rf(estimators=i, max_depth=j, future_day=future_day,
+                                         no_of_features=no_of_features, score=score, our_test_score=our_test_score)
+                    elif our_test_score == top['our_test_score'] and score > top['model_score']:
+                        top = get_top_rf(estimators=i, max_depth=j, future_day=future_day,
+                                         no_of_features=no_of_features, score=score, our_test_score=our_test_score)
+                except:
+                    pass
 
-        top = reduce(lambda acc, x: selectTop(acc, x), combinations, {"our_test_score": 0})
-        result = get_top_rf_result_csv_format(STOCK, top, no_of_features)
-    except:
-        result = f"{STOCK},RF,0,0,{no_of_features},0,{future_day},error\n"
+    result = get_top_rf_result_csv_format(STOCK, top)
+
     print(f"final Result RF: {result}")
     return result
 
 
+def get_top_rf(estimators=-1, max_depth=-1, future_day=-1, no_of_features=-1, score=-1, our_test_score=-1):
+    return {"estimators": estimators, "max_depth": max_depth, "model_score": score,
+            "future_day": future_day,
+            "no_of_features": no_of_features,
+            "our_test_score": our_test_score}
+
+
 def testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes):
     try:
-        model = dummy.DummyClassifier(strategy="most_frequent")
-        X = np.asarray(list(map(lambda row: row[:-1], data_for_algos)))
-        y = np.asarray(list(map(lambda row: row[-1], data_for_algos)))
-        model.fit(X, y)
+        model, score = zr.zr(data_for_algos)
         predictions = model.predict(data_to_predict_for_algos)
-        # our_test_score = collections.Counter(
-        #     predictions[0:future_day] * test_classes[0:future_day]).get(1)
         our_test_score = sum([1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
         our_test_score = 0 if our_test_score is None else our_test_score
-
-        result = f"{STOCK},ZR,0,0,0,0,{future_day},{our_test_score}\n"
-
+        result = result_in_csv(STOCK, 'ZR', Future_day=future_day, Model_Score=score, Our_test_score=our_test_score)
     except:
-        result = f"{STOCK},ZR,0,0,0,0,{future_day},error\n"
+        result = result_in_csv(STOCK, 'ZR', Future_day=future_day, Our_test_score=-1)
     print(result)
     return result
 
@@ -113,10 +122,7 @@ def get_prepared_data(STOCK_FILE, window_size, feature_window_size, discretize):
                                                      window_size=window_size,
                                                      feature_window_size=feature_window_size,
                                                      discretize=discretize).data_frame_with_features()
-    df.drop(columns=['open', 'high', 'low', 'close'], inplace=True)
-    actual_data_to_predict.drop(columns=['open', 'high', 'low', 'close'], inplace=True)
     complete_data = df.to_numpy()
-
     data_for_algos, data_to_predict_for_algos, test_classes = complete_data[:-window_size], complete_data[
                                                                                             -window_size:,
                                                                                             :-1], complete_data[
@@ -142,17 +148,75 @@ def make_missing_dirs(path):
 
 def add_headers(RESULT_FILE):
     with open(RESULT_FILE, 'w') as f:
-        f.write("Stock,Algorithm,Estimators,Depth,Metric,No_of_features,Model_Score,Future_day,Our_test_score\n")
+        f.write("Stock,Algorithm,Estimators,Depth,Distance_function,No_of_features,Model_Score,Future_day,"
+                "C,degree,No_of_neighbors,Our_test_score\n")
 
 
-def testSVM(data_for_algos, data_to_predict_for_algos, test_classes, no_of_features, C, kernel):
-    clf, score = svm.svm_classifier(data_for_algos, no_of_features, C, kernel)
-    print(f"score: {score}, C: {C}, kernel: {kernel}")
+def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day):
+    top = get_top_svm(-1, -1, -1, future_day, -1, 'linear')
+    for no_of_features in range(data_for_algos.shape[1] -1, data_for_algos.shape[1]):
+        print(f"SVM {STOCK} {no_of_features}")
+        for C in [0.5, 1, 5, 10, 100]:
+            try:
+                clf, score = svm.svm_classifier(data_for_algos, no_of_features, C)
+                predictions = clf.predict(data_to_predict_for_algos)
+                our_test_score = sum(
+                    [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
+                our_test_score = 0 if our_test_score is None else our_test_score
+                if (our_test_score > top['our_test_score']) or (
+                        our_test_score == top['our_test_score'] and score > top['model_score']):
+                    top = get_top_svm(C, no_of_features, score, future_day, our_test_score, 'linear')
+            except:
+                continue
+    result = get_svm_result_csv(STOCK, top)
+    print(result)
+    return result
 
 
-def testKNN(data_for_algos, no_of_features, n_neighbors, distance_function):
-    clf, score = knn.knn_classifier(data_for_algos, no_of_features, n_neighbors)
-    print(f"K: {n_neighbors}, score: {score}")
+def get_svm_result_csv(STOCK, top):
+    return result_in_csv(STOCK=STOCK, Algo='SVM', No_of_features=top['no_of_features'], Model_Score=top['model_score'],
+                         Future_day=top['future_day'], C=top['C'], Metric=top['metric'],
+                         Our_test_score=top['our_test_score'])
+
+
+def get_top_svm(C, no_of_features, score, future_day, our_test_score, kernel):
+    return {'C': C, 'no_of_features': no_of_features, "model_score": score, 'metric': kernel,
+            "future_day": future_day,
+            "our_test_score": our_test_score}
+
+
+def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day):
+    top = get_top_knn(-1, -1, -1, future_day, -1, -1)
+    for no_of_features in range(data_for_algos.shape[1] -1 , data_for_algos.shape[1]):
+        for neighbors in [3, 5, 7, 9, 11]:
+            for metric in ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']:
+                try:
+                    clf, selector, score = knn.knn_classifier(data_for_algos, metric, neighbors, no_of_features)
+                    X_new = selector.transform(data_to_predict_for_algos)
+                    predictions = clf.predict(X_new)
+                    our_test_score = sum(
+                        [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
+                    our_test_score = 0 if our_test_score is None else our_test_score
+                    if (our_test_score > top['our_test_score']) or (
+                            our_test_score == top['our_test_score'] and score > top['model_score']):
+                        top = get_top_knn(no_of_features, neighbors, metric, future_day, score, our_test_score)
+                except:
+                    continue
+    result = get_knn_result_csv(STOCK, top)
+    print(result)
+    return result
+
+
+def get_knn_result_csv(STOCK, top):
+    return result_in_csv(STOCK, 'KNN', Metric=top['metric'], No_of_features=top['no_of_features'],
+                         Model_Score=top['model_score'], Future_day=top['future_day'], No_of_neighbors=top['neighbors'],
+                         Our_test_score=top['our_test_score'])
+
+
+def get_top_knn(no_of_features, neighbors, metric, future_day, score, our_test_score):
+    return {'no_of_features': no_of_features, 'neighbors': neighbors, 'metric': metric, "model_score": score,
+            "future_day": future_day,
+            "our_test_score": our_test_score}
 
 
 def runExperiment(lock, STOCK_FILE, RESULT_FILE):
@@ -166,17 +230,21 @@ def runExperiment(lock, STOCK_FILE, RESULT_FILE):
                 STOCK_FILE, future_day, feature_window_size, discretize)
         except:
             continue
-        for k in [3, 5, 7, 9, 11]:
-            testKNN(data_for_algos, 20, k)
-        # for no_of_features in range(initial_no_of_features, max_features, 1):
-        #     print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
-        #     result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-        #                                 test_classes, no_of_features, actual_data_to_predict)
+        # for k in [3, 5, 7, 9, 11]:
+        #     testKNN(data_for_algos, 20, k)
+
+        # result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+        #                             test_classes, actual_data_to_predict)
+        result += testSVM(STOCK=STOCK, data_for_algos=data_for_algos,
+                          data_to_predict_for_algos=data_to_predict_for_algos, test_classes=test_classes,
+                          future_day=future_day)
         #
-        # result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-        #                        test_classes)
-        #
-        # write_result_to_file(lock, RESULT_FILE, result)
+        result += testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
+
+        result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+                               test_classes)
+
+    write_result_to_file(lock, RESULT_FILE, result)
 
 
 def collect_data(no_of_symbols: int, filepath: str):

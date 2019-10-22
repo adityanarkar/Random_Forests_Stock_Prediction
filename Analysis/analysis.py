@@ -66,11 +66,11 @@ def get_means_knn(df: pd.DataFrame):
 
 
 def plot_data():
-    df = pd.read_csv("../Results/Test/Profit_Loss_Target_MinMax_All/Discretize/result_parallel_up_down.csv")
+    df = pd.read_csv("../Results/EndGame/Shuffle/FS/result.csv")
     df = clean_dataframe(df)
     x, y_rf, y_zr, y_knn = gather_data(df)
     plt.plot(x, y_rf, label='RF', color='red')
-    plt.plot(x, y_zr, label='ZR', color='blue')
+    # plt.plot(x, y_zr, label='ZR', color='blue')
     # plt.plot(x, y_knn, label='KNN', color='orange')
     plt.axis([0, 100, 0, 100])
     plt.legend()
@@ -79,11 +79,11 @@ def plot_data():
 
 def gather_data(df: pd.DataFrame):
     y_rf = get_means_rf(df)
-    y_zr = get_means_zr(df)
+    # y_zr = get_means_zr(df)
     # y_knn = get_means_knn(df)
     x = [i for i in range(10, 110, 10)]
 
-    return x, y_rf, y_zr, 0
+    return x, y_rf, 0, 0
 
 
 def plot_feature_selection():
