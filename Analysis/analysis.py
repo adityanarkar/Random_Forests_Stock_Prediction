@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import main_updated
@@ -20,6 +21,8 @@ def clean_dataframe(df: pd.DataFrame):
     df['Our_test_score'] = df['Our_test_score'].apply(lambda x: int(x))
     df['Model_Score'] = df['Model_Score'].apply(lambda x: float(x))
     df['Future_day'] = df['Future_day'].apply(lambda x: int(x))
+    df['Algorithm'] = df['Algorithm'].apply(lambda x: x.strip())
+    df['Stock'] = df['Stock'].apply(lambda x: x.strip())
     return df
 
 
@@ -64,26 +67,35 @@ def get_means_knn(df: pd.DataFrame):
     df = df.copy()
     return [get_mean_for_future_days(df, future_days, 'KNN') for future_days in range(10, 110, 10)]
 
+def get_means_svm(df: pd.DataFrame):
+    df = df.copy()
+    return [get_mean_for_future_days(df, future_days, 'SVM') for future_days in range(10, 110, 10)]
 
 def plot_data():
-    df = pd.read_csv("../Results/Test/Profit_Loss_Target_MinMax_All/Discretize/result_parallel_up_down.csv")
+    df = pd.read_csv("../Results/EndGame/Shuffle/FS/final_result.csv")
+    df.drop_duplicates(inplace=True)
     df = clean_dataframe(df)
-    x, y_rf, y_zr, y_knn = gather_data(df)
+    x, y_rf, y_svm, y_knn, y_zr, = gather_data(df)
     plt.plot(x, y_rf, label='RF', color='red')
+    plt.plot(x, y_svm, label='SVM', color='green')
     plt.plot(x, y_zr, label='ZR', color='blue')
-    # plt.plot(x, y_knn, label='KNN', color='orange')
-    plt.axis([0, 100, 0, 100])
+    plt.plot(x, y_knn, label='KNN', color='orange')
+    # plt.axis([0, 100, 0, 100], option='equal')
+    plt.xticks(np.arange(0, 110, 10))
+    plt.yticks(np.arange(0, 110, 10))
     plt.legend()
+    plt.title('Accuracy graph with train_test_split')
     plt.show()
 
 
 def gather_data(df: pd.DataFrame):
     y_rf = get_means_rf(df)
     y_zr = get_means_zr(df)
-    # y_knn = get_means_knn(df)
+    y_knn = get_means_knn(df)
+    y_svm = get_means_svm(df)
     x = [i for i in range(10, 110, 10)]
 
-    return x, y_rf, y_zr, 0
+    return x, y_rf, y_svm, y_knn, y_zr
 
 
 def plot_feature_selection():

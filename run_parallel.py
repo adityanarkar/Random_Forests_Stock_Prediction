@@ -17,24 +17,19 @@ if __name__ == '__main__':
     lock = Lock()
     completed = []
 
-    RESULT_FILE = "Results/Test/Shuffle/Discretize/result_parallel_up_down.csv"
-    COMPLETED_FILE = "Results/Test/Shuffle/Discretize/completed_up_down.qwe"
+    RESULT_FILE = "Results/EndGame/Shuffle/FS/result_svm_knn_zr.csv"
+    COMPLETED_FILE = "Results/EndGame/Shuffle/FS/completed_svm_knn_zr.qwe"
     main.make_missing_dirs(RESULT_FILE)
     main.make_missing_dirs(COMPLETED_FILE)
 
     main.add_headers(RESULT_FILE)
-    algos = ['RF']
     processes = []
-    counter = 0
-    files = os.listdir('data/')
-    random.shuffle(files)
+    files = list(map(lambda x: x.replace("\n", ""), open('10stocks.txt', 'r').readlines()))
     for filename in files:
-        if not filename in completed and counter < 100:
-            counter += 1
-            p = Process(target=main_updated.runExperiment, args=(lock, filename, RESULT_FILE, algos))
-            p.start()
-            processes.append({"process": p, "stock": filename})
-            if len(processes) % 8 == 0:
-                processes[0]["process"].join()
-                open(COMPLETED_FILE, 'a').write(f"{processes[0]['stock']}\n")
-                processes.remove(processes[0])
+        p = Process(target=main.runExperiment, args=(lock, filename, RESULT_FILE))
+        p.start()
+        processes.append({"process": p, "stock": filename})
+        if len(processes) % 8 == 0:
+            processes[0]["process"].join()
+            open(COMPLETED_FILE, 'a').write(f"{processes[0]['stock']}\n")
+            processes.remove(processes[0])
