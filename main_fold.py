@@ -33,9 +33,9 @@ def getInitial():
 
 
 def result_in_csv(STOCK, Algo, Estimator=0, Depth=0, Distance_function='0', No_of_features=0, Model_Score=0,
-                  Future_day=0, C=-1,
+                  Future_day=0, No_of_neighbors=-1, C=-1,
                   Our_test_score=-1):
-    return f"{STOCK},{Algo},{Estimator},{Depth},{Distance_function},{No_of_features},{Model_Score},{Future_day},{C},{Our_test_score}\n "
+    return f"{STOCK},{Algo},{Estimator},{Depth},{Distance_function},{No_of_features},{Model_Score},{Future_day},{C},{No_of_neighbors},{Our_test_score}\n "
 
 
 def testRandomForests(STOCK, future_day, data_for_algos, estimator_start, estimator_stop,
@@ -63,18 +63,18 @@ def testRandomForests(STOCK, future_day, data_for_algos, estimator_start, estima
 
 
 def get_initial_top_rf():
-    return {"estimators": -1, 'max_depth': -1, 'model_score': -1, 'future_day': -1, 'no_of_features': -1, 'our_test_score':-1}
+    return {"estimators": -1, 'max_depth': -1, 'score': -1, 'future_day': -1, 'no_of_features': -1, 'our_test_score':-1}
 
 
 def get_top_rf(estimators, max_depth, model_score, future_day, no_of_features, last_test_score):
-    return {'estimators': estimators, 'max_depth': max_depth, 'model_score': model_score, 'future_day': future_day,
+    return {'estimators': estimators, 'max_depth': max_depth, 'score': model_score, 'future_day': future_day,
             'no_of_features': no_of_features, 'our_test_score': last_test_score}
 
 
 def get_top_rf_result_csv_format(STOCK, top):
     top_estimator = top["estimators"]
     top_depth = top['max_depth']
-    top_model_score = top['model_score']
+    top_model_score = top['score']
     top_future_day = top['future_day']
     top_no_of_features = top['no_of_features']
     top_our_test_score = top['our_test_score']
@@ -131,12 +131,12 @@ def make_missing_dirs(path):
 def add_headers(RESULT_FILE):
     with open(RESULT_FILE, 'w') as f:
         f.write("Stock,Algorithm,Estimators,Depth,Distance_function,No_of_features,Model_Score,Future_day,"
-                "C,Our_test_score\n")
+                "C,No_of_neighbors,Our_test_score\n")
 
 
 def testKNN(STOCK, data_for_algos, future_day):
     algos = ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']
-    top = get_knn_top("-1", -1, -1, -1)
+    top = get_knn_top("-1", -1, -1, -1, -1)
     print(f"KNN started for {STOCK} {future_day}")
     for no_of_features in [10, 15, 20, 22, "all"]:
         for n_neighbors in [3, 5, 7, 9, 11]:
@@ -144,7 +144,7 @@ def testKNN(STOCK, data_for_algos, future_day):
                 try:
                     clf, score, last_test_score = knn.knn_classifier(data_for_algos, distance_function, n_neighbors, future_day, no_of_features)
                     if is_new_model_better(top, score, last_test_score):
-                        top = get_knn_top(distance_function, score, last_test_score, no_of_features)
+                        top = get_knn_top(distance_function, score, last_test_score, no_of_features, n_neighbors)
                 except:
                     continue
     result = get_csv_result_knn(STOCK, top, future_day)
@@ -157,16 +157,17 @@ def get_csv_result_knn(STOCK, top, future_day):
     return result_in_csv(STOCK, 'KNN', Distance_function=top["distance_function"], Model_Score=top['score'],
                   Future_day=future_day,
                   Our_test_score=top['our_test_score'],
-                  No_of_features=top['no_of_features'])
+                  No_of_features=top['no_of_features'],
+                  No_of_neighbors=top['neighbors'])
 
 
 def is_new_model_better(top, score, last_test_score):
-    return last_test_score > top['our_test_score'] or (
-                last_test_score == top['our_test_score'] and score > top['score'])
+    return score > top['score'] or (
+                score == top['score'] and last_test_score > top['our_test_score'])
 
 
-def get_knn_top(distance_function, score, our_test_score, no_of_features):
-    return {"distance_function": distance_function, 'score': score, 'our_test_score': our_test_score, 'no_of_features': no_of_features}
+def get_knn_top(distance_function, score, our_test_score, no_of_features, neighbors):
+    return {"distance_function": distance_function, 'score': score, 'our_test_score': our_test_score, 'no_of_features': no_of_features, 'neighbors': neighbors}
 
 
 def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,

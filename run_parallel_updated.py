@@ -2,14 +2,14 @@ import multiprocessing
 import os, random, json, main_updated, main_fold
 from multiprocessing import Process, Lock
 
-file = open('configs/config_all_features_all_algos.json')
+file = open('configs/config_fold_cv_all.json')
 configs = json.load(file)
 
 
 def pre_run_tasks(RESULT_FILE, COMPLETED_FILE):
-    main_updated.make_missing_dirs(RESULT_FILE)
-    main_updated.make_missing_dirs(COMPLETED_FILE)
-    main_updated.add_headers(RESULT_FILE)
+    main_fold.make_missing_dirs(RESULT_FILE)
+    main_fold.make_missing_dirs(COMPLETED_FILE)
+    main_fold.add_headers(RESULT_FILE)
 
 
 def get_config_from_dict(dictionary):
