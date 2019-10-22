@@ -45,17 +45,17 @@ def testRandomForests(STOCK, future_day, data_for_algos, estimator_start, estima
     n_estimators = range(estimator_start, estimator_stop, 10)
     max_depth = range(depth_start, depth_stop, 10)
     top = get_initial_top_rf()
-    for no_of_features in [10, 15, 20, 22, data_for_algos.shape[1]]:
-        for i in n_estimators:
-            for j in max_depth:
-                try:
-                    selector, score, last_test_score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features,
-                                                                                   future_day=future_day)
-                    if is_new_model_better(top, score, last_test_score):
-                        top = get_top_rf(estimators=i, max_depth=j, model_score=score, future_day=future_day,
-                                         no_of_features=no_of_features, last_test_score=last_test_score)
-                except:
-                    continue
+    #for no_of_features in [10, 15, 20, 22, data_for_algos.shape[1]]:
+    for i in n_estimators:
+        for j in max_depth:
+            try:
+                selector, score, last_test_score = rf.random_forest_classifier(data_for_algos, i, j, no_of_features,
+                                                                               future_day=future_day)
+                if is_new_model_better(top, score, last_test_score):
+                    top = get_top_rf(estimators=i, max_depth=j, model_score=score, future_day=future_day,
+                                     no_of_features=no_of_features, last_test_score=last_test_score)
+            except:
+                continue
     result = get_top_rf_result_csv_format(STOCK, top)
     print(result)
     print(f"RF ended for {STOCK} {future_day}")
@@ -138,15 +138,15 @@ def testKNN(STOCK, data_for_algos, future_day):
     algos = ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']
     top = get_knn_top("-1", -1, -1, -1, -1)
     print(f"KNN started for {STOCK} {future_day}")
-    for no_of_features in [10, 15, 20, 22, "all"]:
-        for n_neighbors in [3, 5, 7, 9, 11]:
-            for distance_function in algos:
-                try:
-                    clf, score, last_test_score = knn.knn_classifier(data_for_algos, distance_function, n_neighbors, future_day, no_of_features)
-                    if is_new_model_better(top, score, last_test_score):
-                        top = get_knn_top(distance_function, score, last_test_score, no_of_features, n_neighbors)
-                except:
-                    continue
+    #for no_of_features in [10, 15, 20, 22, "all"]:
+    for n_neighbors in [3, 5, 7, 9, 11]:
+        for distance_function in algos:
+            try:
+                clf, score, last_test_score = knn.knn_classifier(data_for_algos, distance_function, n_neighbors, future_day, no_of_features)
+                if is_new_model_better(top, score, last_test_score):
+                    top = get_knn_top(distance_function, score, last_test_score, no_of_features, n_neighbors)
+            except:
+                continue
     result = get_csv_result_knn(STOCK, top, future_day)
     print(result)
     print(f"KNN ended for {STOCK} {future_day}")
@@ -174,14 +174,14 @@ def testSVM(STOCK, data_for_algos, future_day, initial_no_of_features,
             max_features, C):
     print(f"SVM started for {STOCK} {future_day}")
     top = get_top_svm(-1, -1, future_day, -1, -1)
-    for no_of_features in [10, 15, 20, 22, data_for_algos.shape[1]]:
-        for c_val in C:
-            try:
-                clf, score, last_test_score = svm_fold.svm_classifier(data_for_algos, no_of_features, c_val, future_day)
-                if is_new_model_better(top, score, last_test_score):
-                    top = get_top_svm(c_val, score, future_day, no_of_features, last_test_score)
-            except:
-                continue
+    #for no_of_features in [10, 15, 20, 22, data_for_algos.shape[1]]:
+    for c_val in C:
+        try:
+            clf, score, last_test_score = svm_fold.svm_classifier(data_for_algos, no_of_features, c_val, future_day)
+            if is_new_model_better(top, score, last_test_score):
+                top = get_top_svm(c_val, score, future_day, no_of_features, last_test_score)
+        except:
+            continue
     result = get_svm_top_result_csv(STOCK, top)
     print(f"{result}")
     print(f"SVM ended for {STOCK} {future_day}")
