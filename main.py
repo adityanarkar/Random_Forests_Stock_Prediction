@@ -154,7 +154,7 @@ def add_headers(RESULT_FILE):
 
 def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day):
     top = get_top_svm(-1, -1, -1, future_day, -1, 'linear')
-    for no_of_features in range(data_for_algos.shape[1] -1, data_for_algos.shape[1]):
+    for no_of_features in range(initial_no_of_features, data_for_algos.shape[1]):
         print(f"SVM {STOCK} {no_of_features}")
         for C in [0.5, 1, 5, 10, 100]:
             try:
@@ -187,7 +187,7 @@ def get_top_svm(C, no_of_features, score, future_day, our_test_score, kernel):
 
 def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day):
     top = get_top_knn(-1, -1, -1, future_day, -1, -1)
-    for no_of_features in range(data_for_algos.shape[1] -1 , data_for_algos.shape[1]):
+    for no_of_features in range(initial_no_of_features , data_for_algos.shape[1]):
         for neighbors in [3, 5, 7, 9, 11]:
             for metric in ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']:
                 try:

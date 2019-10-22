@@ -28,7 +28,6 @@ if __name__ == '__main__':
     for filename in files:
         p = Process(target=main.runExperiment, args=(lock, filename, RESULT_FILE))
         p.start()
-        p.join()
         processes.append({"process": p, "stock": filename})
         if len(processes) % 8 == 0:
             processes[0]["process"].join()
