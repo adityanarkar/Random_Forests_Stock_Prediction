@@ -1,9 +1,7 @@
 import multiprocessing
-import os, random
 from multiprocessing import Process, Lock
 
 import main
-import main_updated
 
 
 def f(l, i):
@@ -17,14 +15,14 @@ if __name__ == '__main__':
     lock = Lock()
     completed = []
 
-    RESULT_FILE = "Results/EndGame/Shuffle/FS/result_svm_knn_zr.csv"
-    COMPLETED_FILE = "Results/EndGame/Shuffle/FS/completed_svm_knn_zr.qwe"
+    RESULT_FILE = "Results/EndGame/Shuffle/SVM_FS/result.csv"
+    COMPLETED_FILE = "Results/EndGame/Shuffle/SVM_FS/completed.qwe"
     main.make_missing_dirs(RESULT_FILE)
     main.make_missing_dirs(COMPLETED_FILE)
 
     main.add_headers(RESULT_FILE)
     processes = []
-    files = list(map(lambda x: x.replace("\n", ""), open('10stocks.txt', 'r').readlines()))
+    files = list(map(lambda x: x.strip().replace("\n", ""), open('10stocks.txt', 'r').readlines()))
     for filename in files:
         p = Process(target=main.runExperiment, args=(lock, filename, RESULT_FILE))
         p.start()
