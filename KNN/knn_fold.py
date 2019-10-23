@@ -1,16 +1,9 @@
-import multiprocessing as mp
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_selection import SelectKBest, chi2
+from sklearn.neighbors import KNeighborsClassifier
+
 from Prediction import score
 from data_prep import k_splits
-
-
-def min_max_transform(X):
-    scaler = MinMaxScaler()
-    return scaler.fit_transform(X)
 
 
 def knn_classifier(data, metric: str, neighbors: int, future_day, no_of_features):

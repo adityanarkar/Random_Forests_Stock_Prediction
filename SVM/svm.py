@@ -2,15 +2,8 @@ import numpy as np
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.feature_selection import RFE
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import SVC
 from sklearn.utils.testing import ignore_warnings
-
-
-def scale_data(X):
-    scaler = MinMaxScaler()
-    scaler.fit(X)
-    return scaler.transform(X)
 
 
 @ignore_warnings(category=ConvergenceWarning)
