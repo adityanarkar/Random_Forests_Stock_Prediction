@@ -11,10 +11,10 @@ def random_forest_classifier(data, n_estimators, max_depth, no_of_features):
     # training and testing
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
     clf = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth)
-    selector = RFE(clf, no_of_features, step=1)
-    selector = selector.fit(X_train, y_train)
-    score = selector.score(X_test, y_test)
+    clf = RFE(clf, no_of_features, step=1)
+    clf.fit(X_train, y_train)
+    score = clf.score(X_test, y_test)
     # print(selector.support_)
 
-    return selector, score
+    return clf, score
 
