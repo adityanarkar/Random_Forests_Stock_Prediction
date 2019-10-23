@@ -179,7 +179,7 @@ def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, futu
 
 def get_svm_result_csv(STOCK, top):
     return result_in_csv(STOCK=STOCK, Algo='SVM', No_of_features=top['no_of_features'], Model_Score=top['model_score'],
-                         Future_day=top['future_day'], C=top['C'], Metric=top['metric'],
+                         Future_day=top['future_day'], C=top['C'], Metric=top['metric'], degree=top['degree'],
                          Our_test_score=top['our_test_score'])
 
 
@@ -245,7 +245,7 @@ def runExperiment(lock, STOCK_FILE, RESULT_FILE):
                           data_to_predict_for_algos=data_to_predict_for_algos, test_classes=test_classes,
                           future_day=future_day)
         #
-        # result += testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
+        result += testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
         #
         # result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
         #                        test_classes)
