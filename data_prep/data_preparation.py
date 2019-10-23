@@ -74,21 +74,26 @@ class data_preparation(object):
         features.CCI(df, 20, self.discretize)
         df.dropna(inplace=True)
 
-
         df['shifted_value'] = df['adjusted_close'].shift(-1 * self.window)
         df = self.scale_data(df)
         data_to_predict = self.get_fresh_data_for_prediction(df)
-        # df = df.apply(lambda x: self.create_label(x), axis=1)
         self.create_label_profit_loss(df, self.window)
         df.dropna(inplace=True)
-        df.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient', 'open', 'high', 'low', 'close', '9-day-EMA', '12-day-EMA', '26-day-EMA', 'TPMA', 'TP', 'MeanDeviation'], inplace=True)
-        data_to_predict.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient', 'open', 'high', 'low', 'close', '9-day-EMA', '12-day-EMA', '26-day-EMA', 'TPMA', 'TP', 'MeanDeviation'], inplace=True)
+        df.drop(columns=['shifted_value', 'dividend_amount', 'split_coefficient', 'open',
+                         'high', 'low', 'close', '9-day-EMA', '12-day-EMA', '26-day-EMA', 'TPMA', 'TP',
+                         'MeanDeviation'], inplace=True)
+        data_to_predict.drop(
+            columns=['shifted_value', 'dividend_amount', 'split_coefficient', 'open',
+                     'high', 'low', 'close', '9-day-EMA', '12-day-EMA', '26-day-EMA', 'TPMA', 'TP', 'MeanDeviation'],
+            inplace=True)
         return df, data_to_predict
 
     def scale_data(self, df: pd.DataFrame):
         df = df.copy()
         mms = MinMaxScaler()
-        df[['adjusted_close', 'volume', 'diff_3_months', 'diff_LL', 'diff_HH', 'std', 'skew', 'kurtosis', 'entropy', 'fft_min', 'fft_max',
-            'fft_mean']] = mms.fit_transform(df[['adjusted_close', 'volume', 'diff_3_months', 'diff_LL', 'diff_HH', 'std', 'skew', 'kurtosis',
-                                                 'entropy', 'fft_min', 'fft_max', 'fft_mean']])
+        df[['adjusted_close', 'volume', 'diff_3_months', 'diff_LL', 'diff_HH', 'std', 'skew', 'kurtosis', 'entropy',
+            'fft_min', 'fft_max',
+            'fft_mean']] = mms.fit_transform(
+            df[['adjusted_close', 'volume', 'diff_3_months', 'diff_LL', 'diff_HH', 'std', 'skew', 'kurtosis',
+                'entropy', 'fft_min', 'fft_max', 'fft_mean']])
         return df
