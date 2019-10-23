@@ -1,19 +1,12 @@
-import multiprocessing as mp
 import numpy as np
 from sklearn.feature_selection import mutual_info_classif, SelectKBest
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import MinMaxScaler
-
-
-def min_max_transform(X):
-    scaler = MinMaxScaler()
-    return scaler.fit_transform(X)
 
 
 def knn_classifier(data, metric: str, neighbors: int, no_of_features):
     X = np.asarray(list(map(lambda row: row[:-1], data)))
-    X = min_max_transform(X)
+    # X = min_max_transform(X)
     y = np.asarray(list(map(lambda row: row[-1], data)))
 
     # training and testing

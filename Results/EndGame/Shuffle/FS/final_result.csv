@@ -1,4 +1,4 @@
-Stock,Algorithm,Estimators,Depth,Distance_function,Model_Score,No_of_features,Future_day,C,degree,No_of_neighbors,Our_test_score
+Stock,Algorithm,Estimators,Depth,Distance_function,No_of_features,Model_Score,Future_day,C,degree,No_of_neighbors,Our_test_score
 CWEN,RF,10,10,0,0.7803468208092486,10,10,-1.0,0.0,-1.0,4.0
 INXN,RF,10,10,0,0.7634961439588689,10,10,-1.0,0.0,-1.0,8.0
 CWEN,RF,10,10,0,0.8242424242424242,10,20,-1.0,0.0,-1.0,20.0
