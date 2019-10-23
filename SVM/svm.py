@@ -16,7 +16,6 @@ def scale_data(X):
 @ignore_warnings(category=ConvergenceWarning)
 def svm_classifier(data, features_to_select, C, kernel, degree):
     X = np.asarray(list(map(lambda row: row[:-1], data)))
-    X = scale_data(X)
     y = np.asarray(list(map(lambda row: row[-1], data)))
 
     # training and testing

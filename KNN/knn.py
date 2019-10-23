@@ -13,7 +13,7 @@ def min_max_transform(X):
 
 def knn_classifier(data, metric: str, neighbors: int, no_of_features):
     X = np.asarray(list(map(lambda row: row[:-1], data)))
-    X = min_max_transform(X)
+    # X = min_max_transform(X)
     y = np.asarray(list(map(lambda row: row[-1], data)))
 
     # training and testing
