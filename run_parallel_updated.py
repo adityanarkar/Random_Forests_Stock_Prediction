@@ -2,7 +2,7 @@ import multiprocessing
 import os, random, json, main_updated, main_fold
 from multiprocessing import Process, Lock
 
-file = open('configs/config_fold_cv_disc_all.json')
+file = open('configs/config_fold_cv_all.json')
 configs = json.load(file)
 
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
         processes = []
         counter = 0
-        files = list(map(lambda x: x.replace("\n", ""), open('55stocks.txt', 'r').readlines()))
+        files = list(map(lambda x: x.replace("\n", ""), open('10stocks.txt', 'r').readlines()))
         files.reverse()
         print(files)
         for filename in files:
