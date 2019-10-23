@@ -79,7 +79,7 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
                         top = get_top_rf(estimators=i, max_depth=j, future_day=future_day,
                                          no_of_features=no_of_features, score=score, our_test_score=our_test_score)
                 except:
-                    pass
+                    continue
 
     result = get_top_rf_result_csv_format(STOCK, top)
 
@@ -157,17 +157,21 @@ def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, futu
     for no_of_features in range(initial_no_of_features, data_for_algos.shape[1]):
         print(f"SVM {STOCK} {no_of_features}")
         for C in [0.5, 1, 5, 10, 100]:
-            try:
-                clf, score = svm.svm_classifier(data_for_algos, no_of_features, C)
-                predictions = clf.predict(data_to_predict_for_algos)
-                our_test_score = sum(
-                    [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
-                our_test_score = 0 if our_test_score is None else our_test_score
-                if (our_test_score > top['our_test_score']) or (
-                        our_test_score == top['our_test_score'] and score > top['model_score']):
-                    top = get_top_svm(C, no_of_features, score, future_day, our_test_score, 'linear')
-            except:
-                continue
+            for kernel in ['linear', 'poly', 'rbf']:
+                for degree in [1, 2, 3, 4]:
+                    try:
+                        clf, score = svm.svm_classifier(data_for_algos, no_of_features, C, kernel, degree)
+                        predictions = clf.predict(data_to_predict_for_algos)
+                        our_test_score = sum(
+                            [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
+                        our_test_score = 0 if our_test_score is None else our_test_score
+                        if (our_test_score > top['our_test_score']) or (
+                                our_test_score == top['our_test_score'] and score > top['model_score']):
+                            top = get_top_svm(C, no_of_features, score, future_day, our_test_score, kernel, degree)
+                        if kernel != 'poly':
+                            break
+                    except:
+                        continue
     result = get_svm_result_csv(STOCK, top)
     print(result)
     return result
@@ -179,19 +183,21 @@ def get_svm_result_csv(STOCK, top):
                          Our_test_score=top['our_test_score'])
 
 
-def get_top_svm(C, no_of_features, score, future_day, our_test_score, kernel):
+def get_top_svm(C, no_of_features, score, future_day, our_test_score, kernel, degree=-1):
     return {'C': C, 'no_of_features': no_of_features, "model_score": score, 'metric': kernel,
             "future_day": future_day,
+            "degree": degree,
             "our_test_score": our_test_score}
 
 
 def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day):
     top = get_top_knn(-1, -1, -1, future_day, -1, -1)
-    for no_of_features in range(initial_no_of_features , data_for_algos.shape[1]):
+    for no_of_features in range(initial_no_of_features, data_for_algos.shape[1]):
         for neighbors in [3, 5, 7, 9, 11]:
             for metric in ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']:
                 try:
-                    clf, selector, score = knn.knn_classifier(data_for_algos, metric, neighbors, no_of_features)
+                    clf, selector, score = knn.knn_classifier(data_for_algos, metric, neighbors, data_for_algos.shape[
+                                                                                                     1] - 1 if no_of_features == 'all' else no_of_features)
                     X_new = selector.transform(data_to_predict_for_algos)
                     predictions = clf.predict(X_new)
                     our_test_score = sum(
@@ -199,7 +205,9 @@ def testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, futu
                     our_test_score = 0 if our_test_score is None else our_test_score
                     if (our_test_score > top['our_test_score']) or (
                             our_test_score == top['our_test_score'] and score > top['model_score']):
-                        top = get_top_knn(no_of_features, neighbors, metric, future_day, score, our_test_score)
+                        top = get_top_knn(data_for_algos.shape[
+                                              1] - 1 if no_of_features == 'all' else no_of_features, neighbors, metric,
+                                          future_day, score, our_test_score)
                 except:
                     continue
     result = get_knn_result_csv(STOCK, top)
@@ -230,8 +238,6 @@ def runExperiment(lock, STOCK_FILE, RESULT_FILE):
                 STOCK_FILE, future_day, feature_window_size, discretize)
         except:
             continue
-        # for k in [3, 5, 7, 9, 11]:
-        #     testKNN(data_for_algos, 20, k)
 
         # result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
         #                             test_classes, actual_data_to_predict)
@@ -239,10 +245,10 @@ def runExperiment(lock, STOCK_FILE, RESULT_FILE):
                           data_to_predict_for_algos=data_to_predict_for_algos, test_classes=test_classes,
                           future_day=future_day)
         #
-        result += testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
-
-        result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
-                               test_classes)
+        # result += testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
+        #
+        # result += testZeroHour(STOCK, future_day, data_for_algos, data_to_predict_for_algos,
+        #                        test_classes)
 
     write_result_to_file(lock, RESULT_FILE, result)
 
