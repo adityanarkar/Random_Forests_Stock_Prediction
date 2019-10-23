@@ -9,20 +9,28 @@ max_features = 23
 future_day_start = 10
 future_day_stop = 110
 
+
 def remove_errors(df: pd.DataFrame):
     df = df[df['Our_test_score'] != 'error']
     df = df[df['Our_test_score'] != -1]
     return df
 
 
+def only_selective_stocks(df: pd.DataFrame):
+    df = df.copy()
+    files = list(map(lambda x: x.strip().replace("\n", "").replace('.csv', ''), open('../10stocks.txt', 'r').readlines()))
+    return df[df['Stock'].isin(files)]
+
+
 def clean_dataframe(df: pd.DataFrame):
     df = df.copy()
-    df = remove_errors(df)
     df['Our_test_score'] = df['Our_test_score'].apply(lambda x: int(x))
     df['Model_Score'] = df['Model_Score'].apply(lambda x: float(x))
     df['Future_day'] = df['Future_day'].apply(lambda x: int(x))
     df['Algorithm'] = df['Algorithm'].apply(lambda x: x.strip())
     df['Stock'] = df['Stock'].apply(lambda x: x.strip())
+    df = remove_errors(df)
+    df = only_selective_stocks(df)
     return df
 
 
@@ -49,7 +57,7 @@ def get_mean_for_feature_selection(df: pd.DataFrame):
         result_for_feature = []
         for j in range(future_day_start, future_day_stop, 10):
             result_for_feature.append(get_mean_of_no_features_future_day(df, i, j))
-        results.append({'no_of_features': i, 'result':result_for_feature})
+        results.append({'no_of_features': i, 'result': result_for_feature})
     return results
 
 
@@ -67,12 +75,14 @@ def get_means_knn(df: pd.DataFrame):
     df = df.copy()
     return [get_mean_for_future_days(df, future_days, 'KNN') for future_days in range(10, 110, 10)]
 
+
 def get_means_svm(df: pd.DataFrame):
     df = df.copy()
     return [get_mean_for_future_days(df, future_days, 'SVM') for future_days in range(10, 110, 10)]
 
+
 def plot_data():
-    df = pd.read_csv("../Results/EndGame/Shuffle/FS/final_result.csv")
+    df = pd.read_csv("../Results/EndGame/Shuffle/Disc/end_result.csv")
     df.drop_duplicates(inplace=True)
     df = clean_dataframe(df)
     x, y_rf, y_svm, y_knn, y_zr, = gather_data(df)
@@ -82,9 +92,12 @@ def plot_data():
     plt.plot(x, y_knn, label='KNN', color='orange')
     # plt.axis([0, 100, 0, 100], option='equal')
     plt.xticks(np.arange(0, 110, 10))
+    plt.xlabel('Future Days', fontsize=12)
     plt.yticks(np.arange(0, 110, 10))
+    plt.ylabel('%Accuracy', fontsize=12)
     plt.legend()
-    plt.title('Accuracy graph with train_test_split')
+    plt.title('Accuracy Graph - Shuffle - Discretized features only')
+    plt.savefig('../Graphs/Shuffle/Disc/accuracy_graph_final_with_labels.png')
     plt.show()
 
 
@@ -136,7 +149,6 @@ def get_mean_for_shuffle(df: pd.DataFrame):
     return results
 
 
-
 def plot_shuffle(shuffle_result_file):
     df = pd.read_csv(shuffle_result_file)
     df.drop_duplicates(inplace=True)
@@ -144,9 +156,10 @@ def plot_shuffle(shuffle_result_file):
     x = [i for i in range(future_day_start, future_day_stop, 10)]
     results = get_mean_for_shuffle(df)
     for result in results:
-         plt.plot(x, result['result'], label=result['label'])
+        plt.plot(x, result['result'], label=result['label'])
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2, fancybox=True, shadow=True)
     plt.show()
+
 
 plot_data()
 # plot_feature_selection()
