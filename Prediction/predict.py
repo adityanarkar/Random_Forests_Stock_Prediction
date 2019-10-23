@@ -8,6 +8,7 @@ import collections
 
 from KNN.knn import knn_classifier
 from SVM.svm import svm_classifier
+from ZeroR.zr import zr
 
 
 def clean_dataframe(df: pd.DataFrame):
@@ -59,6 +60,9 @@ def predict(x: pd.Series):
     elif x['Algorithm'] == 'KNN':
         metric, neighbors, no_of_features, future_day, model_score = get_important_stuff(x)
         return predict_knn(data_for_algos, actual_data_to_predict, STOCKFILE, metric, neighbors, no_of_features, future_day, model_score)
+    elif x['Algorithm'] == 'ZR':
+        future_day, model_score = get_important_stuff(x)
+        return predict_zr(data_for_algos, actual_data_to_predict, STOCKFILE, future_day, model_score)
 
 
 def predict_rf(data_for_algos, actual_data_to_predict, STOCKFILE, estimators, depth, no_of_features, future_day, model_score):
@@ -84,7 +88,14 @@ def predict_knn(data_for_algos, actual_data_to_predict, STOCKFILE, metric, neigh
     actual_data = selector.transform(actual_data)
     prediction = clf.predict(actual_data)
     print(prediction)
-    return f"Stock:{STOCKFILE},no_of_features:{no_of_features},future_day:{future_day},model_score:{model_score},Distance_Function:{metric},No_of_neighbors:{neighbors}"
+    return f"Stock:{STOCKFILE},no_of_features:{no_of_features},future_day:{future_day},model_score:{model_score},Distance_Function:{metric},No_of_neighbors:{neighbors},prediction:{prediction},Result:{collections.Counter(prediction).most_common(1)}"
+
+
+def predict_zr(data_for_algos, actual_data_to_predict, STOCKFILE, future_day, model_score):
+    clf, score = zr(data_for_algos)
+    prediction = clf.predict(actual_data_to_predict)
+    return f"Stock:{STOCKFILE},future_day:{future_day},model_score:{model_score},prediction:{prediction},Result:{collections.Counter(prediction).most_common(1)}"
+
 
 def get_important_stuff(x):
     if x['Algorithm'] == 'RF':
@@ -93,6 +104,8 @@ def get_important_stuff(x):
         return get_important_svm_stuff(x)
     elif x['Algorithm'] == 'KNN':
         return get_important_knn_stuff(x)
+    elif x['Algorithm'] == 'ZR':
+        return get_important_zr_stuff(x)
 
 def get_important_rf_stuff(x):
     estimators = x['Estimators']
@@ -121,8 +134,15 @@ def get_important_knn_stuff(x):
     model_score = x['Model_Score']
     return metric, neighbors, no_of_features, future_day, model_score
 
+
+def get_important_zr_stuff(x):
+    future_day = x['Future_day']
+    model_score = x['Model_Score']
+    return future_day, model_score
+
+
 def write_predictions(pred):
-    with open('../Predictions/Shuffle/FS/KNN_Shuffle.txt', 'a') as file:
+    with open('../Predictions/Shuffle/FS/All_Predictions.txt', 'a') as file:
         file.write(pred+"\n")
 
 def run(filepath):
@@ -133,4 +153,4 @@ def run(filepath):
 
 
 # run(os.path.join(definitions.ROOT_DIR, 'Results/Profit_Loss/Discretize/result_parallel_profit_loss.csv'))
-run(os.path.join(definitions.ROOT_DIR, 'Results/EndGame/Shuffle/FS/result_svm_knn_zr.csv'))
+run(os.path.join(definitions.ROOT_DIR, 'Results/EndGame/Shuffle/FS/final_result.csv'))
