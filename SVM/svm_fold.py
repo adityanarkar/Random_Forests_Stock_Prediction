@@ -8,17 +8,10 @@ from sklearn.exceptions import ConvergenceWarning
 from data_prep import k_splits
 
 
-def scale_data(X):
-    scaler = MinMaxScaler()
-    scaler.fit(X)
-    return scaler.transform(X)
-
-
 @ignore_warnings(category=ConvergenceWarning)
 def svm_classifier(data, features_to_select, C, future_day, kernel, degree):
     scores = []
     X = np.asarray(list(map(lambda row: row[:-1], data)))
-    #X = scale_data(X)
     y = np.asarray(list(map(lambda row: row[-1], data)))
 
     # training and testing
