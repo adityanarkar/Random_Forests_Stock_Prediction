@@ -18,7 +18,7 @@ initial_no_of_features = 10
 max_features = 21
 feature_window_size = 50
 discretize = True
-p = multiprocessing.Pool(multiprocessing.cpu_count())
+
 
 
 def selectTop(top, x):
@@ -39,7 +39,7 @@ def getInitial():
 def get_top_rf_result_csv_format(STOCK, top):
     top_estimator = top["estimators"]
     top_depth = top['max_depth']
-    top_model_score = top['model_score']
+    top_model_score = top['score']
     top_future_day = top['future_day']
     top_our_test_score = top['our_test_score']
     top_no_of_features = top['no_of_features']
@@ -56,18 +56,22 @@ def result_in_csv(STOCK, Algo, Estimator=-1, Depth=-1, Metric='0', No_of_feature
 
 
 def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes,
-                      actual_data_to_predict):
+                      actual_data_to_predict, p):
     list_of_dicts = []
     n_estimators = range(10, estimator_end, 10)
     max_depth = range(10, depth, 10)
-    top = get_top_rf()
     for no_of_features in range(10, data_for_algos.shape[1], 1):
         print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
         for i in n_estimators:
             for j in max_depth:
-                list_of_dicts.append({'n_estimators': i, 'max_depth': j, 'no_of_features': no_of_features})
-    results = p.map(lambda dict_of_params: rf.random_forest_classifier(data_for_algos, dict_of_params), list_of_dicts)
-    top = reduce(lambda dict_of_scores: selectTop(top, dict_of_scores), results, initial=get_top_rf())
+                list_of_dicts.append({'estimators': i, 'max_depth': j, 'no_of_features': no_of_features, 'data': data_for_algos})
+    results = p.map(rf.random_forest_classifier, list_of_dicts)
+    top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_rf())
+    result = get_final_result_with_pred_rf(STOCK, top, data_to_predict_for_algos,  test_classes, future_day)
+    return result
+
+
+def get_final_result_with_pred_rf(STOCK, top, data_to_predict_for_algos,  test_classes, future_day):
     if 'clf' not in top:
         return get_top_rf_result_csv_format(STOCK, get_top_rf(future_day=future_day))
     clf = top['clf']
@@ -75,6 +79,7 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
     our_test_score = sum(
         [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
     top.update({'our_test_score': our_test_score})
+    top.update({"future_day": future_day})
     result = get_top_rf_result_csv_format(STOCK, top)
     print(f"final Result RF: {result}")
     return result
@@ -159,7 +164,7 @@ def pre_run_tasks(RESULT_FILE, COMPLETED_FILE):
     add_headers(RESULT_FILE)
 
 
-def run_tests_for_a_stock(filename):
+def run_tests_for_a_stock(filename, algos, RESULT_FILE, p):
     STOCK = filename.split(".csv")[0]
     result = ""
     for future_day in range(future_day_start, future_day_stop, 10):
@@ -172,7 +177,7 @@ def run_tests_for_a_stock(filename):
         if 'RF' in algos:
             print('Starting RF testing')
             result += testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_algos, test_classes,
-                                        actual_data_to_predict)
+                                        actual_data_to_predict, p)
             print(result)
             print('Finished RF testing')
 
@@ -198,19 +203,23 @@ def run_tests_for_a_stock(filename):
     return filename
 
 
-file = open('configs/config_all_fs.json')
-configs = json.load(file)
+def main():
+    p = multiprocessing.Pool(2)
+    file = open('configs/config_all_fs.json')
+    configs = json.load(file)
 
-for dictionary in configs:
-    RESULT_FILE, COMPLETED_FILE, algos, future_day_start, future_day_stop, estimator_start, \
-    estimator_stop, depth_start, depth_stop, initial_no_of_features, max_features, \
-    feature_window_size, discretize, C = get_config_from_dict(dictionary)
-    pre_run_tasks(RESULT_FILE, COMPLETED_FILE)
+    for dictionary in configs:
+        RESULT_FILE, COMPLETED_FILE, algos, future_day_start, future_day_stop, estimator_start, \
+        estimator_stop, depth_start, depth_stop, initial_no_of_features, max_features, \
+        feature_window_size, discretize, C = get_config_from_dict(dictionary)
+        pre_run_tasks(RESULT_FILE, COMPLETED_FILE)
 
-    files = list(map(lambda x: x.replace("\n", ""), open('10stocks.txt', 'r').readlines()))
-    files.reverse()
-    print(files)
-
-    if __name__ == '__main__':
+        files = list(map(lambda x: x.replace("\n", ""), open('10stocks.txt', 'r').readlines()))
+        files.reverse()
+        print(files)
         for filename in files:
-            run_tests_for_a_stock(filename)
+            run_tests_for_a_stock(filename, algos, RESULT_FILE, p)
+
+
+if __name__ == '__main__':
+    main()
