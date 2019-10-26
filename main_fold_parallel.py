@@ -204,7 +204,7 @@ def run_tests_for_a_stock(filename, algos, RESULT_FILE, p):
 
 
 def main():
-    p = multiprocessing.Pool(2)
+    p = multiprocessing.Pool(multiprocessing.cpu_count())
     file = open('configs/config_all_fs.json')
     configs = json.load(file)
 
