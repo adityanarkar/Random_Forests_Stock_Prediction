@@ -12,9 +12,9 @@
     "discretize": 1,
     "C": [0.5, 1, 5, 10, 100],
     "algos": [
-      "RF"
+      "SVM"
     ],
-    "RESULT_FILE": "Results/Shuffle/Parallel/result.csv",
-    "COMPLETED_FILE": "Results/Shuffle/Parallel/completed.txt"
+    "RESULT_FILE": "Results/Shuffle/Parallel/svm_result.csv",
+    "COMPLETED_FILE": "Results/Shuffle/Parallel/svm_completed.txt"
   }
 ]

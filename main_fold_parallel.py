@@ -3,11 +3,14 @@ import os
 from functools import reduce
 from threading import Lock
 import multiprocessing
+
+import numpy as np
+
 import KNN.knn as knn
 import ZeroR.zr as zr
 import definitions
 from RandomForest.parallel import rf
-from SVM import svm
+from SVM.parallel import svm
 from data_prep import data_preparation as dp
 
 future_day_start = 10
@@ -20,11 +23,10 @@ feature_window_size = 50
 discretize = True
 
 
-
 def selectTop(top, x):
-    if x['score'] == -1:
+    if x['our_test_score'] == -1:
         return top
-    elif x["score"] > top["score"]:
+    elif x["our_test_score"] > top["our_test_score"]:
         return x
     return top
 
@@ -64,14 +66,15 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
         print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
         for i in n_estimators:
             for j in max_depth:
-                list_of_dicts.append({'estimators': i, 'max_depth': j, 'no_of_features': no_of_features, 'data': data_for_algos})
+                list_of_dicts.append(
+                    {'estimators': i, 'max_depth': j, 'no_of_features': no_of_features, 'data': data_for_algos})
     results = p.map(rf.random_forest_classifier, list_of_dicts)
     top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_rf())
-    result = get_final_result_with_pred_rf(STOCK, top, data_to_predict_for_algos,  test_classes, future_day)
+    result = get_final_result_with_pred_rf(STOCK, top, data_to_predict_for_algos, test_classes, future_day)
     return result
 
 
-def get_final_result_with_pred_rf(STOCK, top, data_to_predict_for_algos,  test_classes, future_day):
+def get_final_result_with_pred_rf(STOCK, top, data_to_predict_for_algos, test_classes, future_day):
     if 'clf' not in top:
         return get_top_rf_result_csv_format(STOCK, get_top_rf(future_day=future_day))
     clf = top['clf']
@@ -90,6 +93,35 @@ def get_top_rf(estimators=-1, max_depth=-1, future_day=-1, no_of_features=-1, sc
             "future_day": future_day,
             "no_of_features": no_of_features,
             "our_test_score": our_test_score}
+
+
+def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day, p):
+    list_of_dicts = []
+    for no_of_features in range(10, data_for_algos.shape[1], 1):
+        # no_of_features = -1
+        for kernel in ['linear', 'poly', 'rbf']:
+            for degree in [1, 2, 3, 4]:
+                for c_val in [0.5, 1, 5, 10, 100]:
+                    list_of_dicts.append(
+                        {'no_of_features': no_of_features, 'degree': degree, 'C': c_val, 'kernel': kernel,
+                         'data': data_for_algos, 'data_predict': data_to_predict_for_algos,
+                         'test_classes': test_classes})
+    results = p.map(svm.svm_classifier, list_of_dicts)
+    top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_svm())
+    result = get_svm_top_result_csv(STOCK, top, future_day)
+    return result
+
+
+def get_top_svm(C=-1, score=-1, future_day=-1, no_of_features=-1, degree=-1, kernel='-1', our_test_score=-1):
+    return {'C': C, 'score': score, 'future_day': future_day, 'no_of_features': no_of_features, 'degree': degree,
+            'kernel': kernel, 'our_test_score': our_test_score}
+
+
+def get_svm_top_result_csv(STOCK, top, future_day):
+    return result_in_csv(STOCK, 'SVM', No_of_features=top['no_of_features'], Metric=top['kernel'],
+                         C=top['C'],
+                         Model_Score=top['score'], Future_day=future_day, degree=top['degree'],
+                         Our_test_score=top['our_test_score'])
 
 
 def create_dir_and_store_result(dir_to_create, result_path, result):
@@ -181,11 +213,11 @@ def run_tests_for_a_stock(filename, algos, RESULT_FILE, p):
             print(result)
             print('Finished RF testing')
 
-        # if 'SVM' in algos:
-        #     print('Starting SVM testing')
-        #     result += testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
-        #     print(result)
-        #     print('Finished SVM testing')
+        if 'SVM' in algos:
+            print('Starting SVM testing')
+            result += testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day, p)
+            print(result)
+            print('Finished SVM testing')
         #
         # if 'KNN' in algos:
         #     print('Starting KNN testing')
@@ -204,7 +236,7 @@ def run_tests_for_a_stock(filename, algos, RESULT_FILE, p):
 
 
 def main():
-    p = multiprocessing.Pool(multiprocessing.cpu_count())
+    p = multiprocessing.Pool(2)
     file = open('configs/config_all_fs.json')
     configs = json.load(file)
 
