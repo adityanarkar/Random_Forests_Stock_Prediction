@@ -10,11 +10,11 @@
     "max_features": 29,
     "feature_window_size": 50,
     "discretize": 1,
-    "C": [0.5, 1, 5, 10, 100]
+    "C": [0.5, 1, 5, 10, 100],
     "algos": [
-      "KNN","RF","SVM", "ZR"
+      "RF"
     ],
-    "RESULT_FILE": "Results/10FoldCV/Feature_Selection/Profit_loss/result.csv",
-    "COMPLETED_FILE": "Results/10FoldCV/Feature_Selection/Profit_loss/completed.txt"
+    "RESULT_FILE": "Results/Shuffle/Parallel/result.csv",
+    "COMPLETED_FILE": "Results/Shuffle/Parallel/completed.txt"
   }
 ]
