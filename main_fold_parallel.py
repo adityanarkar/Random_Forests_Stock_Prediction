@@ -97,7 +97,7 @@ def get_top_rf(estimators=-1, max_depth=-1, future_day=-1, no_of_features=-1, sc
 
 def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day, p):
     list_of_dicts = []
-    for no_of_features in range(23, data_for_algos.shape[1], 1):
+    for no_of_features in range(10, data_for_algos.shape[1], 1):
         # no_of_features = -1
         for kernel in ['linear', 'poly', 'rbf']:
             for degree in [1, 2, 3, 4]:
