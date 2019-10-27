@@ -13,8 +13,6 @@ def svm_classifier(dict_of_params):
     C = dict_of_params['C']
     degree = dict_of_params['degree']
     kernel = dict_of_params['kernel']
-    data_predict = dict_of_params['data_predict']
-    test_classes = dict_of_params['test_classes']
     X = np.asarray(list(map(lambda row: row[:-1], data)))
     y = np.asarray(list(map(lambda row: row[-1], data)))
 
@@ -28,10 +26,8 @@ def svm_classifier(dict_of_params):
     score = clf.score(X_test, y_test)
     print(score)
     dict_of_params.update(
-        {'clf': clf, 'score': score, 'our_test_score': get_our_test_score(clf, selector, data_predict, test_classes)})
+        {'clf': clf, 'score': score, 'selector': selector})
     dict_of_params.pop('data')
-    dict_of_params.pop('test_classes')
-    dict_of_params.pop('data_predict')
     return dict_of_params
 
 
