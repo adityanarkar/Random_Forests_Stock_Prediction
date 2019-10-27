@@ -100,11 +100,13 @@ def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, futu
     for no_of_features in range(10, data_for_algos.shape[1], 1):
         # no_of_features = -1
         for kernel in ['linear', 'poly', 'rbf']:
-            for degree in [1, 2, 3, 4]:
-                for c_val in [0.5, 1, 5, 10, 100]:
+            for c_val in [0.5, 1, 5, 10, 100]:
+                for degree in [1, 2, 3, 4]:
                     list_of_dicts.append(
                         {'no_of_features': no_of_features, 'degree': degree, 'C': c_val, 'kernel': kernel,
                          'data': data_for_algos})
+                    if kernel != 'poly':
+                        break
     results = p.map(svm.svm_classifier, list_of_dicts)
     top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_svm())
     result = get_svm_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, test_classes)
