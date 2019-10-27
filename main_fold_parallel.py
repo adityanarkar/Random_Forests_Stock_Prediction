@@ -24,9 +24,9 @@ discretize = True
 
 
 def selectTop(top, x):
-    if x['our_test_score'] == -1:
+    if x['score'] == -1:
         return top
-    elif x["our_test_score"] > top["our_test_score"]:
+    elif x["score"] > top["score"]:
         return x
     return top
 
@@ -97,18 +97,17 @@ def get_top_rf(estimators=-1, max_depth=-1, future_day=-1, no_of_features=-1, sc
 
 def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day, p):
     list_of_dicts = []
-    for no_of_features in range(10, data_for_algos.shape[1], 1):
+    for no_of_features in range(23, data_for_algos.shape[1], 1):
         # no_of_features = -1
         for kernel in ['linear', 'poly', 'rbf']:
             for degree in [1, 2, 3, 4]:
                 for c_val in [0.5, 1, 5, 10, 100]:
                     list_of_dicts.append(
                         {'no_of_features': no_of_features, 'degree': degree, 'C': c_val, 'kernel': kernel,
-                         'data': data_for_algos, 'data_predict': data_to_predict_for_algos,
-                         'test_classes': test_classes})
+                         'data': data_for_algos})
     results = p.map(svm.svm_classifier, list_of_dicts)
     top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_svm())
-    result = get_svm_top_result_csv(STOCK, top, future_day)
+    result = get_svm_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, test_classes)
     return result
 
 
@@ -117,11 +116,17 @@ def get_top_svm(C=-1, score=-1, future_day=-1, no_of_features=-1, degree=-1, ker
             'kernel': kernel, 'our_test_score': our_test_score}
 
 
-def get_svm_top_result_csv(STOCK, top, future_day):
+def get_svm_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, test_classes):
+    selector = top['selector']
+    if selector != 0:
+        data_to_predict_for_algos = selector.transform(data_to_predict_for_algos)
+    predictions = top['clf'].predict(data_to_predict_for_algos)
+    our_test_score = sum(
+        [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
     return result_in_csv(STOCK, 'SVM', No_of_features=top['no_of_features'], Metric=top['kernel'],
                          C=top['C'],
                          Model_Score=top['score'], Future_day=future_day, degree=top['degree'],
-                         Our_test_score=top['our_test_score'])
+                         Our_test_score=our_test_score)
 
 
 def create_dir_and_store_result(dir_to_create, result_path, result):
@@ -236,10 +241,9 @@ def run_tests_for_a_stock(filename, algos, RESULT_FILE, p):
 
 
 def main():
-    p = multiprocessing.Pool(2)
     file = open('configs/config_all_fs.json')
     configs = json.load(file)
-
+    p = multiprocessing.Pool(multiprocessing.cpu_count())
     for dictionary in configs:
         RESULT_FILE, COMPLETED_FILE, algos, future_day_start, future_day_stop, estimator_start, \
         estimator_stop, depth_start, depth_stop, initial_no_of_features, max_features, \
