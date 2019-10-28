@@ -6,7 +6,7 @@ import multiprocessing
 
 import numpy as np
 
-import KNN.knn as knn
+from KNN.parallel import knn
 import ZeroR.zr as zr
 import definitions
 from RandomForest.parallel import rf
@@ -62,12 +62,12 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
     list_of_dicts = []
     n_estimators = range(10, estimator_end, 10)
     max_depth = range(10, depth, 10)
-    for no_of_features in range(10, data_for_algos.shape[1], 1):
-        print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
-        for i in n_estimators:
-            for j in max_depth:
-                list_of_dicts.append(
-                    {'estimators': i, 'max_depth': j, 'no_of_features': no_of_features, 'data': data_for_algos})
+    # for no_of_features in range(10, data_for_algos.shape[1], 1):
+    print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
+    for i in n_estimators:
+        for j in max_depth:
+            list_of_dicts.append(
+                {'estimators': i, 'max_depth': j, 'no_of_features': no_of_features, 'data': data_for_algos})
     results = p.map(rf.random_forest_classifier, list_of_dicts)
     top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_rf())
     result = get_final_result_with_pred_rf(STOCK, top, data_to_predict_for_algos, test_classes, future_day)
@@ -97,16 +97,16 @@ def get_top_rf(estimators=-1, max_depth=-1, future_day=-1, no_of_features=-1, sc
 
 def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day, p):
     list_of_dicts = []
-    for no_of_features in range(10, data_for_algos.shape[1], 1):
+    # for no_of_features in range(10, data_for_algos.shape[1], 1):
         # no_of_features = -1
-        for kernel in ['linear', 'poly', 'rbf']:
-            for c_val in [0.5, 1, 5, 10, 100]:
-                for degree in [1, 2, 3, 4]:
-                    list_of_dicts.append(
-                        {'no_of_features': no_of_features, 'degree': degree, 'C': c_val, 'kernel': kernel,
-                         'data': data_for_algos})
-                    if kernel != 'poly':
-                        break
+    for kernel in ['linear', 'poly', 'rbf']:
+        for c_val in [0.5, 1, 5, 10, 100]:
+            for degree in [1, 2, 3, 4]:
+                list_of_dicts.append(
+                    {'no_of_features': no_of_features, 'degree': degree, 'C': c_val, 'kernel': kernel,
+                     'data': data_for_algos})
+                if kernel != 'poly':
+                    break
     results = p.map(svm.svm_classifier, list_of_dicts)
     top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_svm())
     result = get_svm_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, test_classes)
@@ -129,6 +129,36 @@ def get_svm_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, te
                          C=top['C'],
                          Model_Score=top['score'], Future_day=future_day, degree=top['degree'],
                          Our_test_score=our_test_score)
+
+
+def testKNN(STOCK, data_for_algos, future_day, data_to_predict_for_algos, test_classes, p):
+    list_of_dicts = []
+    for no_of_features in range(data_for_algos.shape[1] - 1, data_for_algos.shape[1]):
+        for neighbors in [3, 5, 7, 9, 11]:
+            for metric in ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']:
+                list_of_dicts.append(
+                    {'no_of_features': 'all' if no_of_features == data_for_algos.shape[1] - 1 else no_of_features,
+                     'data': data_for_algos, 'metric': metric, 'neighbors': neighbors})
+    results = p.map(knn.knn_classifier, list_of_dicts)
+    top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_knn())
+    result = get_knn_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, test_classes)
+    return result
+
+def get_top_knn():
+    return {'no_of_features': -1, 'neighbors': -1, 'metric': '-1', "score": -1, 'clf': -1, 'selector': -1}
+
+
+def get_knn_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, test_classes):
+    selector = top['selector']
+    if selector == -1:
+        return result_in_csv(STOCK, 'KNN', Future_day=future_day)
+    data_to_predict_for_algos = selector.transform(data_to_predict_for_algos)
+    predictions = top['clf'].predict(data_to_predict_for_algos)
+    our_test_score = sum(
+        [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
+    no_of_features = data_to_predict_for_algos.shape[1] if top['no_of_features'] == 'all' else top['no_of_features']
+    return result_in_csv(STOCK, 'KNN', No_of_features=no_of_features, Metric=top['metric'], Model_Score=top['score'],
+                         Our_test_score=our_test_score, Future_day=future_day)
 
 
 def create_dir_and_store_result(dir_to_create, result_path, result):
@@ -226,11 +256,11 @@ def run_tests_for_a_stock(filename, algos, RESULT_FILE, p):
             print(result)
             print('Finished SVM testing')
         #
-        # if 'KNN' in algos:
-        #     print('Starting KNN testing')
-        #     result += testKNN(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day)
-        #     print(result)
-        #     print('Finished KNN testing')
+        if 'KNN' in algos:
+            print('Starting KNN testing')
+            result += testKNN(STOCK, data_for_algos, future_day, data_to_predict_for_algos, test_classes, p)
+            print(result)
+            print('Finished KNN testing')
         #
         # if 'ZR' in algos:
         #     print('Starting ZR testing')
@@ -243,7 +273,7 @@ def run_tests_for_a_stock(filename, algos, RESULT_FILE, p):
 
 
 def main():
-    file = open('configs/config_all_fs.json')
+    file = open('configs/all_disc_final.json')
     configs = json.load(file)
     p = multiprocessing.Pool(multiprocessing.cpu_count())
     for dictionary in configs:
