@@ -63,6 +63,7 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
     n_estimators = range(10, estimator_end, 10)
     max_depth = range(10, depth, 10)
     # for no_of_features in range(10, data_for_algos.shape[1], 1):
+    no_of_features = -1
     print(f"Predicting for future days: {future_day} No of features: {no_of_features}")
     for i in n_estimators:
         for j in max_depth:
@@ -98,7 +99,7 @@ def get_top_rf(estimators=-1, max_depth=-1, future_day=-1, no_of_features=-1, sc
 def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, future_day, p):
     list_of_dicts = []
     # for no_of_features in range(10, data_for_algos.shape[1], 1):
-        # no_of_features = -1
+    no_of_features = -1
     for kernel in ['linear', 'poly', 'rbf']:
         for c_val in [0.5, 1, 5, 10, 100]:
             for degree in [1, 2, 3, 4]:
