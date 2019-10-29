@@ -24,9 +24,9 @@ discretize = True
 
 
 def selectTop(top, x):
-    if x['score'] == -1:
+    if x['our_test_score'] == -1:
         return top
-    elif x["score"] > top["score"]:
+    elif x["our_test_score"] > top["our_test_score"]:
         return x
     return top
 
@@ -68,7 +68,8 @@ def testRandomForests(STOCK, future_day, data_for_algos, data_to_predict_for_alg
     for i in n_estimators:
         for j in max_depth:
             list_of_dicts.append(
-                {'estimators': i, 'max_depth': j, 'no_of_features': no_of_features, 'data': data_for_algos})
+                {'estimators': i, 'max_depth': j, 'no_of_features': no_of_features, 'data': data_for_algos,
+                 'actual_data': data_to_predict_for_algos, 'test_classes': test_classes})
     results = p.map(rf.random_forest_classifier, list_of_dicts)
     top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_rf())
     result = get_final_result_with_pred_rf(STOCK, top, data_to_predict_for_algos, test_classes, future_day)
@@ -105,7 +106,7 @@ def testSVM(STOCK, data_for_algos, data_to_predict_for_algos, test_classes, futu
             for degree in [1, 2, 3, 4]:
                 list_of_dicts.append(
                     {'no_of_features': no_of_features, 'degree': degree, 'C': c_val, 'kernel': kernel,
-                     'data': data_for_algos})
+                     'data': data_for_algos, 'actual_data': data_to_predict_for_algos, 'test_classes': test_classes})
                 if kernel != 'poly':
                     break
     results = p.map(svm.svm_classifier, list_of_dicts)
@@ -139,14 +140,17 @@ def testKNN(STOCK, data_for_algos, future_day, data_to_predict_for_algos, test_c
             for metric in ['euclidean', 'manhattan', 'chebyshev', 'hamming', 'canberra', 'braycurtis']:
                 list_of_dicts.append(
                     {'no_of_features': 'all' if no_of_features == data_for_algos.shape[1] - 1 else no_of_features,
-                     'data': data_for_algos, 'metric': metric, 'neighbors': neighbors})
+                     'data': data_for_algos, 'metric': metric, 'neighbors': neighbors,
+                     'actual_data': data_to_predict_for_algos, 'test_classes': test_classes})
     results = p.map(knn.knn_classifier, list_of_dicts)
     top = reduce(lambda top, dict_of_scores: selectTop(top, dict_of_scores), results, get_top_knn())
     result = get_knn_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, test_classes)
     return result
 
+
 def get_top_knn():
-    return {'no_of_features': -1, 'neighbors': -1, 'metric': '-1', "score": -1, 'clf': -1, 'selector': -1}
+    return {'no_of_features': -1, 'neighbors': -1, 'metric': '-1', "score": -1, 'clf': -1, 'selector': -1,
+            'our_test_score': -1}
 
 
 def get_knn_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, test_classes):
@@ -159,7 +163,7 @@ def get_knn_top_result_csv(STOCK, top, future_day, data_to_predict_for_algos, te
         [1 if predictions[i] == test_classes[i] else 0 for i in range(len(predictions))])
     no_of_features = data_to_predict_for_algos.shape[1] if top['no_of_features'] == 'all' else top['no_of_features']
     return result_in_csv(STOCK, 'KNN', No_of_features=no_of_features, Metric=top['metric'], Model_Score=top['score'],
-                         Our_test_score=our_test_score, Future_day=future_day)
+                         Our_test_score=our_test_score, Future_day=future_day, No_of_neighbors=top['neighbors'])
 
 
 def create_dir_and_store_result(dir_to_create, result_path, result):
@@ -274,7 +278,7 @@ def run_tests_for_a_stock(filename, algos, RESULT_FILE, p):
 
 
 def main():
-    file = open('configs/all_disc_final.json')
+    file = open('configs/train_on_everything.json')
     configs = json.load(file)
     p = multiprocessing.Pool(multiprocessing.cpu_count())
     for dictionary in configs:
