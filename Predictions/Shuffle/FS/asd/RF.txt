@@ -1,0 +1,15 @@
+BHP(1S, PASS), CUZ(1B, PASS), ABR(1B, PASS), INXN(1B, PASS), APH(1B, PASS)
+Stock:BHP.csv,Estimators:40,Depth:40,no_of_features:10,future_day:40,model_score:0.8110992529348986,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+  1.  1.  1.  1.],Result:[(-1.0, 21)]
+Stock:CUZ.csv,Estimators:50,Depth:40,no_of_features:10,future_day:50,model_score:0.8,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,Estimators:40,Depth:20,no_of_features:10,future_day:40,model_score:0.8642149929278642,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1.
+  1.  1.  1.  1.],Result:[(1.0, 39)]
+Stock:INXN.csv,Estimators:50,Depth:30,no_of_features:10,future_day:30,model_score:0.8042895442359249,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.],Result:[(1.0, 30)]
+Stock:APH.csv,Estimators:20,Depth:20,no_of_features:11,future_day:40,model_score:0.8347547974413646,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.
+ -1. -1. -1. -1. -1.  1.  1.  1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1.  1.],Result:[(1.0, 21)]

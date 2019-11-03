@@ -1,0 +1,66 @@
+Stock:LAZ.csv,Estimators:50,Depth:30,no_of_features:10,future_day:20.0,model_score:0.7287630402384501,prediction:[ 1.  1.  1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1.
+  1.  1.],Result:[(1.0, 17)]
+Stock:BHP.csv,Estimators:40,Depth:40,no_of_features:13,future_day:40.0,model_score:0.7812166488794023,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1.  1.  1.],Result:[(-1.0, 24)]
+Stock:CUZ.csv,Estimators:20,Depth:40,no_of_features:10,future_day:10.0,model_score:0.671858774662513,prediction:[-1. -1.  0.  0.  0.  0.  0.  0.  0.  0.],Result:[(0.0, 8)]
+Stock:ABR.csv,Estimators:50,Depth:50,no_of_features:11,future_day:40.0,model_score:0.8359264497878359,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:ABR.csv,no_of_features:11,future_day:40.0,model_score:0.7949080622347949,Distance_Function:braycurtis,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:ABR.csv,Estimators:40,Depth:50,no_of_features:10,future_day:50.0,model_score:0.8497854077253219,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,Estimators:30,Depth:20,no_of_features:10,future_day:90.0,model_score:0.856071964017991,prediction:[ 1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1. -1. -1.  1. -1. -1. -1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 81)]
+Stock:INXN.csv,Estimators:40,Depth:30,no_of_features:10,future_day:30.0,model_score:0.7828418230563002,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 29)]
+Stock:INXN.csv,no_of_features:10,future_day:30.0,model_score:0.7372654155495979,Distance_Function:chebyshev,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.],Result:[(1.0, 30)]
+Stock:INXN.csv,Estimators:20,Depth:30,no_of_features:12,future_day:40.0,model_score:0.821917808219178,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:INXN.csv,Estimators:50,Depth:20,no_of_features:11,future_day:50.0,model_score:0.8179271708683473,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:INXN.csv,no_of_features:10,future_day:80.0,model_score:0.7747747747747747,Distance_Function:canberra,No_of_neighbors:5,prediction:[-1. -1. -1. -1. -1. -1. -1.  1. -1. -1. -1.  1.  1. -1. -1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 68)]
+Stock:APH.csv,Estimators:50,Depth:20,no_of_features:17,future_day:40.0,model_score:0.8304904051172708,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.],Result:[(-1.0, 26)]
+Stock:APH.csv,no_of_features:10,future_day:100.0,model_score:0.8213483146067416,Distance_Function:braycurtis,No_of_neighbors:3,prediction:[ 1.  1.  1.  1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1. -1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1.  1.  1.  1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.  1.  1.  1.  1.  1.  1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.],Result:[(-1.0, 55)]
+
+ ----
+
+
+Stock:CUZ.csv,Estimators:20,Depth:40,no_of_features:10,future_day:10.0,model_score:0.671858774662513,prediction:[-1. -1. -1.  0.  0. -1.  0.  0.  0.  0.],Result:[(0.0, 6)]
+Stock:ABR.csv,Estimators:50,Depth:50,no_of_features:11,future_day:40.0,model_score:0.8359264497878359,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1.  1.  1. -1.  1.  1.  1.
+  1.  1.  1.  1.],Result:[(1.0, 37)]
+Stock:ABR.csv,no_of_features:11,future_day:40.0,model_score:0.7949080622347949,Distance_Function:braycurtis,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:ABR.csv,Estimators:40,Depth:50,no_of_features:10,future_day:50.0,model_score:0.8497854077253219,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,Estimators:30,Depth:20,no_of_features:10,future_day:90.0,model_score:0.856071964017991,prediction:[ 1.  1.  1.  1.  1.  1.  1. -1.  1. -1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 86)]
+Stock:INXN.csv,Estimators:40,Depth:30,no_of_features:10,future_day:30.0,model_score:0.7828418230563002,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+ -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 29)]
+Stock:INXN.csv,no_of_features:10,future_day:30.0,model_score:0.7372654155495979,Distance_Function:chebyshev,No_of_neighbors:3,prediction:[ 1.  1.  1.  1. -1. -1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 27)]
+Stock:APH.csv,Estimators:50,Depth:20,no_of_features:17,future_day:40.0,model_score:0.8304904051172708,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.],Result:[(-1.0, 26)]

@@ -1,0 +1,4 @@
+Stock:FB.csv,no_of_features:14,future_day:10.0,model_score:0.7777777777777778,Distance_Function:braycurtis,No_of_neighbors:3,prediction:[-1. -1.  0.  0. -1.  1. -1.  0.  0.  0.],Result:[(0.0, 5)]
+Stock:GOOGL.csv,no_of_features:11,future_day:40.0,model_score:0.8609077598828697,Distance_Function:canberra,No_of_neighbors:3,prediction:[ 1.  1.  1.  1.  1.  1.  1. -1.  1.  1. -1. -1. -1. -1. -1. -1.  1. -1.
+ -1.  1. -1. -1. -1. -1. -1. -1. -1.  1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.],Result:[(-1.0, 28)]

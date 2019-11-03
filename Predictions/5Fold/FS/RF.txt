@@ -1,0 +1,6 @@
+BHP(1S, PASS) INXN(1B, PASS)
+Stock:BHP.csv,Estimators:40,Depth:10,no_of_features:14,future_day:40,model_score:0.5538461538461539,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1.  1. -1.],Result:[(-1.0, 23)]
+Stock:INXN.csv,Estimators:10,Depth:10,no_of_features:18,future_day:30,model_score:0.5387096774193548,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.],Result:[(1.0, 30)]

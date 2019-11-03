@@ -1,0 +1,145 @@
+Stock:BHP.csv,Estimators:40,Depth:40,no_of_features:10,future_day:40,model_score:0.8110992529348986,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.  1.
+ -1. -1. -1. -1.],Result:[(-1.0, 25)]
+Stock:CUZ.csv,Estimators:20,Depth:20,no_of_features:10,future_day:30,model_score:0.7906976744186046,prediction:[-1. -1. -1. -1.  1.  0.  0.  1.  0.  0.  0.  0.  1.  1.  1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.],Result:[(-1.0, 19)]
+Stock:CUZ.csv,Estimators:50,Depth:40,no_of_features:10,future_day:50,model_score:0.8,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:CWEN.csv,Estimators:40,Depth:30,no_of_features:11,future_day:20,model_score:0.8303030303030303,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 20)]
+Stock:ABR.csv,Estimators:40,Depth:20,no_of_features:10,future_day:40,model_score:0.8642149929278642,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:ABR.csv,Estimators:30,Depth:20,no_of_features:11,future_day:50,model_score:0.8698140200286123,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,Estimators:10,Depth:50,no_of_features:10,future_day:90,model_score:0.8575712143928036,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 90)]
+Stock:INXN.csv,Estimators:50,Depth:30,no_of_features:10,future_day:30,model_score:0.8042895442359249,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.],Result:[(1.0, 30)]
+Stock:INXN.csv,Estimators:40,Depth:20,no_of_features:21,future_day:40,model_score:0.8054794520547945,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:APH.csv,Estimators:20,Depth:20,no_of_features:11,future_day:40,model_score:0.8347547974413646,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.],Result:[(-1.0, 25)]
+Stock:APH.csv,Estimators:30,Depth:50,no_of_features:11,future_day:50,model_score:0.832258064516129,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1. -1. -1. -1. -1. -1.  1.  0.  1.  1.  1.  1.  1.],Result:[(1.0, 44)]
+Stock:CWEN.csv,no_of_features:11,future_day:20,model_score:0.7636363636363637,Distance_Function:euclidean,No_of_neighbors:5,prediction:[ 1.  1.  1.  1.  1. -1. -1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.
+  1.  0.],Result:[(1.0, 16)]
+Stock:INXN.csv,no_of_features:10,future_day:30,model_score:0.7801608579088471,Distance_Function:braycurtis,No_of_neighbors:7,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.],Result:[(1.0, 30)]
+Stock:INXN.csv,no_of_features:10,future_day:40,model_score:0.7917808219178082,Distance_Function:manhattan,No_of_neighbors:7,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:ABR.csv,no_of_features:10,future_day:50,model_score:0.8469241773962805,Distance_Function:manhattan,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,no_of_features:10,future_day:90,model_score:0.8425787106446777,Distance_Function:euclidean,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 90)]
+Stock:CUZ.csv,no_of_features:13,future_day:50,model_score:0.7677419354838709,Distance_Function:chebyshev,No_of_neighbors:3,prediction:[-1.  1. -1.  1.  1. -1.  1.  1. -1.  1.  1. -1.  1.  1.  1. -1.  1.  1.
+ -1. -1. -1. -1. -1. -1.  1.  1.  1. -1.  1.  1. -1.  1.  1.  1. -1. -1.
+ -1.  1. -1. -1. -1. -1. -1. -1.  1. -1.  1. -1. -1.  1.],Result:[(-1.0, 26)]
+
+ ---
+
+
+Stock:BHP.csv,Estimators:40,Depth:40,no_of_features:10,future_day:40,model_score:0.8110992529348986,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.  1.
+  1.  1.  1.  1.],Result:[(1.0, 20)]
+Stock:CUZ.csv,Estimators:50,Depth:40,no_of_features:10,future_day:50,model_score:0.8,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 49)]
+Stock:CWEN.csv,Estimators:40,Depth:30,no_of_features:11,future_day:20,model_score:0.8303030303030303,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 20)]
+Stock:ABR.csv,Estimators:40,Depth:20,no_of_features:10,future_day:40,model_score:0.8642149929278642,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:ABR.csv,Estimators:30,Depth:20,no_of_features:11,future_day:50,model_score:0.8698140200286123,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,Estimators:10,Depth:50,no_of_features:10,future_day:90,model_score:0.8575712143928036,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+ -1.  1. -1. -1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 86)]
+Stock:INXN.csv,Estimators:50,Depth:30,no_of_features:10,future_day:30,model_score:0.8042895442359249,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.],Result:[(1.0, 30)]
+Stock:INXN.csv,Estimators:40,Depth:20,no_of_features:21,future_day:40,model_score:0.8054794520547945,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:APH.csv,Estimators:20,Depth:20,no_of_features:11,future_day:40,model_score:0.8347547974413646,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1.
+ -1. -1.  1. -1.],Result:[(1.0, 33)]
+Stock:APH.csv,Estimators:30,Depth:50,no_of_features:11,future_day:50,model_score:0.832258064516129,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1. -1. -1.  1.  1.  1.
+ -1. -1. -1. -1. -1. -1. -1. -1.  0.  1.  1.  1.  1.  1.],Result:[(1.0, 38)]
+Stock:ABR.csv,no_of_features:10,future_day:50,model_score:0.8469241773962805,Distance_Function:manhattan,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,no_of_features:10,future_day:90,model_score:0.8425787106446777,Distance_Function:euclidean,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 90)]
+
+ ---
+ 
+Stock:BHP.csv,Estimators:40,Depth:40,no_of_features:10,future_day:40,model_score:0.8110992529348986,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.],Result:[(-1.0, 23)]
+Stock:CUZ.csv,Estimators:50,Depth:40,no_of_features:10,future_day:50,model_score:0.8,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:CWEN.csv,Estimators:40,Depth:30,no_of_features:11,future_day:20,model_score:0.8303030303030303,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 20)]
+Stock:ABR.csv,Estimators:40,Depth:20,no_of_features:10,future_day:40,model_score:0.8642149929278642,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1. -1.  1.
+  1. -1.  1. -1.],Result:[(1.0, 36)]
+Stock:ABR.csv,Estimators:30,Depth:20,no_of_features:11,future_day:50,model_score:0.8698140200286123,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,Estimators:10,Depth:50,no_of_features:10,future_day:90,model_score:0.8575712143928036,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1.  1. -1. -1. -1. -1. -1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 84)]
+Stock:INXN.csv,Estimators:50,Depth:30,no_of_features:10,future_day:30,model_score:0.8042895442359249,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.],Result:[(1.0, 30)]
+Stock:INXN.csv,Estimators:40,Depth:20,no_of_features:21,future_day:40,model_score:0.8054794520547945,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:APH.csv,Estimators:20,Depth:20,no_of_features:11,future_day:40,model_score:0.8347547974413646,prediction:[ 1.  1.  1.  1.  1.  1.  0.  0.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1.
+  1.  1.  1.  1.  1.  1.  1. -1. -1. -1.  1.  1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.],Result:[(1.0, 24)]
+Stock:APH.csv,Estimators:30,Depth:50,no_of_features:11,future_day:50,model_score:0.832258064516129,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,no_of_features:10,future_day:50,model_score:0.8469241773962805,Distance_Function:manhattan,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,no_of_features:10,future_day:90,model_score:0.8425787106446777,Distance_Function:euclidean,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 90)]
+
+
+ ---
+
+
+Stock:BHP.csv,Estimators:40,Depth:40,no_of_features:10,future_day:40.0,model_score:0.8110992529348986,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+  1.  1.  1.  1.],Result:[(-1.0, 21)]
+Stock:CUZ.csv,Estimators:50,Depth:40,no_of_features:10,future_day:50.0,model_score:0.8,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 49)]
+Stock:ABR.csv,Estimators:40,Depth:20,no_of_features:10,future_day:40.0,model_score:0.8642149929278642,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:INXN.csv,Estimators:50,Depth:30,no_of_features:10,future_day:30.0,model_score:0.8042895442359249,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1.],Result:[(1.0, 30)]
+Stock:APH.csv,Estimators:20,Depth:20,no_of_features:11,future_day:40.0,model_score:0.8347547974413646,prediction:[ 1.  1.  1.  1.  1.  1. -1. -1. -1.  1.  1.  1.  1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.],Result:[(-1.0, 30)]
+Stock:ABR.csv,no_of_features:10,future_day:50.0,model_score:0.8469241773962805,Distance_Function:manhattan,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1.],Result:[(1.0, 50)]
+Stock:ABR.csv,no_of_features:10,future_day:90.0,model_score:0.8425787106446777,Distance_Function:euclidean,No_of_neighbors:3,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 90)]

@@ -1,0 +1,15 @@
+Stock:GOOGL.csv,Estimators:20,Depth:30,no_of_features:22,future_day:40.0,model_score:28.7,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1. -1. -1. -1. -1. -1. -1.
+ -1. -1.  1.  1.],Result:[(1.0, 31)]
+Stock:GOOGL.csv,no_of_features:10,future_day:40.0,model_score:29.6,Distance_Function:hamming,No_of_neighbors:9,prediction:[-1. -1. -1.  1. -1.  1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1.  1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1.],Result:[(-1.0, 37)]
+
+---
+
+Stock:GOOGL.csv,Estimators:20,Depth:30,no_of_features:19,future_day:40.0,model_score:28.7,prediction:[ 1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1. -1.  1. -1. -1. -1.  1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1.  1.],Result:[(1.0, 25)]
+Stock:GOOGL.csv,no_of_features:10,future_day:40.0,model_score:29.6,Distance_Function:hamming,No_of_neighbors:9,prediction:[ 1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+ -1. -1.  1.  1. -1.  1.  1. -1. -1.  1. -1. -1.  1.  1.  1.  1. -1. -1.
+  1. -1. -1.  1.],Result:[(1.0, 28)]

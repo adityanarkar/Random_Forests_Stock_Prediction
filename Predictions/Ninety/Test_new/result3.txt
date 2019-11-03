@@ -1,0 +1,3 @@
+Stock:GOOGL.csv,Estimators:20,Depth:10,no_of_features:14,future_day:40.0,model_score:0.6149341142020498,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1. -1. -1. -1. -1. -1.
+ -1. -1.  1.  1.],Result:[(1.0, 32)]

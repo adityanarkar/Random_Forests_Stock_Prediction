@@ -1,4 +1,4 @@
-BHP(1B, FAIL), CWEN(3B, PASS), ABR(3B, PASS), APH(1B, PASS)
+BHP(2B, FAIL), CWEN(3B, PASS), ABR(5B, PASS), APH(2B, PASS)
 Stock:BHP.csv,no_of_features:0,future_day:50.0,model_score:0.5419108280254777,C:0.5,kernel:linear,degree:0,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
  1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
  1. 1.],Result:[(1.0, 50)]
@@ -29,3 +29,16 @@ Stock:ABR.csv,no_of_features:0,future_day:100.0,model_score:0.5092857142857142,C
   1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 98)]
 Stock:APH.csv,no_of_features:0,future_day:40.0,model_score:0.5437578814627995,C:0.5,kernel:linear,degree:0,prediction:[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
  1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.],Result:[(1.0, 40)]
+Stock:BHP.csv,Estimators:40,Depth:50,no_of_features:11,future_day:20.0,model_score:0.5120496894409938,prediction:[-1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1. -1. -1. -1. -1. -1.
+ -1.  0.],Result:[(1.0, 11)]
+Stock:ABR.csv,Estimators:30,Depth:40,no_of_features:11,future_day:40.0,model_score:0.48200000000000004,prediction:[ 1.  1.  1. -1.  1. -1.  1.  1.  1.  1.  1.  1. -1.  1. -1.  1.  1.  1.
+  1.  1.  1.  1.  0.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.],Result:[(1.0, 35)]
+Stock:ABR.csv,Estimators:20,Depth:40,no_of_features:11,future_day:90.0,model_score:0.5135802469135803,prediction:[ 1. -1. -1.  1. -1.  1. -1. -1. -1.  1.  1.  1.  1.  1.  1.  1. -1.  1.
+  1.  1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1. -1. -1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1. -1.  1.  1. -1. -1.  1. -1.  1.  1.  1. -1.
+  1. -1.  1.  1.  1. -1.  1.  1.  1.  1.  1. -1. -1.  1.  1.  1.  1.  1.
+  1. -1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1.  1.],Result:[(1.0, 67)]
+Stock:APH.csv,Estimators:30,Depth:10,no_of_features:11,future_day:40.0,model_score:0.5195460277427489,prediction:[ 1. -1. -1. -1.  1.  1.  1.  1.  1.  1. -1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1.  1.  1.  1. -1.  1.  1.  1.
+ -1.  1. -1. -1.],Result:[(1.0, 31)]

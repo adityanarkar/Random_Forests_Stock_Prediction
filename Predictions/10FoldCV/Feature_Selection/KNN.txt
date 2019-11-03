@@ -1,0 +1,21 @@
+INXN(2B, 1S, PASS), HUN(1B, FAIL), APH(1S, FAIL)
+Stock:INXN.csv,no_of_features:10,future_day:60,model_score:40.0,Distance_Function:braycurtis,No_of_neighbors:11,prediction:[ 1. -1. -1. -1. -1. -1. -1. -1.  1. -1.  1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1.  1. -1.  1.  1. -1. -1. -1.  1.  1.  1.  1. -1. -1. -1.  1.
+ -1. -1.  1. -1.  1.  1. -1.  1. -1.  1.  1. -1.  1.  1.  1. -1.  1. -1.
+  1. -1. -1.  1.  1. -1.],Result:[(-1.0, 36)]
+Stock:INXN.csv,no_of_features:10,future_day:70,model_score:49.75,Distance_Function:euclidean,No_of_neighbors:9,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1. -1.
+  1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 64)]
+Stock:INXN.csv,no_of_features:10,future_day:100,model_score:71.0,Distance_Function:chebyshev,No_of_neighbors:7,prediction:[-1. -1. -1. -1. -1. -1. -1. -1.  1. -1. -1. -1.  1. -1. -1. -1.  1.  1.
+  1.  1.  1. -1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+ -1. -1. -1. -1.  1.  1.  1.  1. -1. -1.  1.  1. -1.  1.  1. -1.  1. -1.
+ -1. -1. -1.  1.  1. -1.  1. -1. -1. -1.  1. -1.  1.  1. -1. -1. -1. -1.
+ -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1.  1.  1. -1.  1. -1.
+ -1. -1. -1. -1. -1. -1.  1.  1.  1. -1.],Result:[(1.0, 51)]
+Stock:HUN.csv,no_of_features:10,future_day:20,model_score:14.333333333333336,Distance_Function:braycurtis,No_of_neighbors:5,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1.  1.  0.  1.  1.
+  1.  1.],Result:[(1.0, 18)]
+Stock:APH.csv,no_of_features:15,future_day:60,model_score:41.333333333333336,Distance_Function:manhattan,No_of_neighbors:11,prediction:[-1.  1. -1. -1. -1. -1. -1. -1. -1.  1. -1. -1. -1.  1.  1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.  1. -1. -1.  1.  1.
+  1.  1. -1.  1.  1.  1.  1. -1.  1. -1.  1.  1. -1. -1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.],Result:[(-1.0, 34)]

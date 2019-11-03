@@ -1,0 +1,15 @@
+BHP(2B, 2S, PASS), ABR(1S, FAIL)
+Stock:BHP.csv,no_of_features:16,future_day:10,model_score:0.445,Distance_Function:chebyshev,No_of_neighbors:3,prediction:[-1.  1. -1. -1.  1. -1.  0.  0.  0. -1.],Result:[(-1.0, 5)]
+Stock:BHP.csv,no_of_features:15,future_day:20,model_score:0.5027707808564231,Distance_Function:manhattan,No_of_neighbors:3,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  0. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1.],Result:[(-1.0, 11)]
+Stock:BHP.csv,no_of_features:13,future_day:40,model_score:0.5176923076923077,Distance_Function:canberra,No_of_neighbors:3,prediction:[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1.  1.  1.  1. -1.
+ -1.  1. -1.  1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.  1.
+  1.  1.  1.  1.],Result:[(1.0, 21)]
+Stock:BHP.csv,no_of_features:10,future_day:50,model_score:0.5033591731266149,Distance_Function:hamming,No_of_neighbors:3,prediction:[ 1. -1. -1. -1. -1. -1.  1. -1.  1. -1.  1.  1. -1.  1.  1.  1.  1.  1.
+ -1. -1. -1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.
+  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.],Result:[(1.0, 39)]
+Stock:ABR.csv,no_of_features:10,future_day:90,model_score:0.5218018018018018,Distance_Function:hamming,No_of_neighbors:3,prediction:[-1. -1. -1.  1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.
+ -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.],Result:[(-1.0, 89)]
